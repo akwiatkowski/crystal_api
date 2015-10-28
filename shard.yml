@@ -1,0 +1,13 @@
+name: crystal_api
+version: 0.1.0
+
+authors:
+  - Aleksander Kwiatkowski <bobikx@poczta.fm>
+
+dependencies:
+  crystal-pg:
+    github: "will/crystal-pg"
+  moonshine:
+    github: dhruvrajvanshi/Moonshine
+
+license: MIT
