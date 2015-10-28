@@ -9,8 +9,13 @@ class CrystalApi::Pg
     @db = PG.connect(pg_string)
   end
 
-  def get_objects(collection)
-    sql = "select * from #{collection};"
+  def get_objects(collection, columns)
+    sql = "select #{columns.join(", ")} from #{collection};"
+    return @db.exec(sql)
+  end
+
+  def get_objects(collection, db_id, columns)
+    sql = "select #{columns.join(", ")} from #{collection} where id = #{db_id};"
     return @db.exec(sql)
   end
 
