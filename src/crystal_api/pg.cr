@@ -19,8 +19,8 @@ class CrystalApi::Pg
     return @db.exec(sql)
   end
 
-  def insert_object(collection, attributes)
-    sql = "insert into #{collection} (name) values ('#{attributes["name"]}');"
+  def insert_object(collection, columns, values)
+    sql = "insert into #{collection} (#{columns.join(", ")}) values (#{values.join(", ")}) returning *;"
     return @db.exec(sql)
   end
 

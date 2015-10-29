@@ -21,7 +21,7 @@ class CrystalApi::App
     @app.controller(HomeController.new)
     @app.controller(@events_controller)
 
-    @app.run(8000)
+    @app.run(8001)
   end
 
 end

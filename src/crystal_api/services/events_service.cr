@@ -20,6 +20,12 @@ class CrystalApi::Service::EventsService
       return nil
     else
       return collection[0]
-    end 
+    end
+  end
+
+  def create(params)
+    result = @adapter.insert_object("events", ["name"], ["'" + params["name"] + "'"] )
+    collection = result.rows.map{|r| CrystalApi::Model::Event.new(r[0], r[1].to_s) }
+    return collection[0]
   end
 end
