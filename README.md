@@ -5,23 +5,82 @@ It does not use ORM instead custom SQL queries.
 
 ## Roadmap
 
-- [ ] Fix DB mapping to allow create database
+- [ ] Fix DB mapping to allow create database - add types of columns to definition list
 - [ ] Check and fix JSON mapping
-- [ ] Update action
-- [ ] Destroy action
-- [ ] Clean Postgres adapter 
+- [x] Update action
+- [x] Destroy action
+- [ ] Clean Postgres adapter
 
 ## Installation
 
+1. Copy `config/database.yml.sample` to `config/database.yml`
 
-TODO: Write installation instructions here
+   `copy config/database.yml.sample config/database.yml`
 
+2. Change Postgresql user and password in `config/database.yml`
+
+3. Create database if needed accessible via previously set credentials.
+
+4. Create sample table:
+
+```
+create table if not exists events (
+  id serial,
+  name varchar(255),
+  primary key(id)
+)
+```
+
+5. Run `shards install`
+
+6. Run server `crystal bin/api.cr`
 
 ## Usage
 
+You have simple REST JSON api server now run on port 8001. Feel free to mess a bit.
 
+## Index
 
-TODO: Write usage instructions here
+GET http://localhost:8001/events
+
+```
+curl -H "Content-Type: application/json" -X GET http://localhost:8001/events
+```
+
+## Show
+
+GET http://localhost:8001/events/:id
+
+```
+curl -H "Content-Type: application/json" -X GET http://localhost:8001/events/1
+```
+
+But first create an Event :)
+
+## Create
+
+POST http://localhost:8001/events
+
+```
+curl -H "Content-Type: application/json" -X POST -d '{"event":{"name": "test1"}}' http://localhost:8001/events
+```
+
+## Update
+
+PUT http://localhost:8001/events/:id
+
+```
+curl -H "Content-Type: application/json" -X PUT -d '{"event":{"name": "test2"}}' http://localhost:8001/events/1
+```
+
+## Delete
+
+DELETE http://localhost:8001/events/:id
+
+```
+curl -H "Content-Type: application/json" -X DELETE http://localhost:8001/events/1
+```
+
 
 ## Development
 
