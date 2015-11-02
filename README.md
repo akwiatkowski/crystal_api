@@ -1,6 +1,15 @@
 # crystal_api
 
-TODO: Sample REST api in crystal using custom sql queries instead of ORM
+Sample application as a structure for REST API written in Crystal.
+It does not use ORM instead custom SQL queries.
+
+## Roadmap
+
+- [ ] Fix DB mapping to allow create database
+- [ ] Check and fix JSON mapping
+- [ ] Update action
+- [ ] Destroy action
+- [ ] Clean Postgres adapter 
 
 ## Installation
 

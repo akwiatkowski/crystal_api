@@ -19,9 +19,28 @@ class CrystalApi::Pg
     return @db.exec(sql)
   end
 
-  def insert_object(collection, columns, values)
+  def insert_object(collection, hash)
+    columns = [] of String
+    values = [] of String
+
+    hash.keys.each do |column|
+      columns << column
+      value = hash[column]
+      values << escape_value(value)
+    end
+
     sql = "insert into #{collection} (#{columns.join(", ")}) values (#{values.join(", ")}) returning *;"
     return @db.exec(sql)
+  end
+
+  def escape_value(value)
+    if value.is_a?(Int32)
+      return value.to_s
+    elsif value.is_a?(String)
+      return "'" + value.to_s + "'"
+    else
+      return "'" + value.to_s + "'"
+    end
   end
 
   def create_table(collection)

@@ -1,0 +1,4 @@
+host: localhost
+database: crystal
+user: crystal_user
+password: crystal_password
