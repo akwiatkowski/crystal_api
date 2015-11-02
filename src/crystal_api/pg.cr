@@ -47,6 +47,11 @@ class CrystalApi::Pg
     return @db.exec(sql)
   end
 
+  def delete_object(collection, db_id)
+    sql = "delete from only #{collection} where id = #{db_id} returning *;"
+    return @db.exec(sql)
+  end
+
   def escape_value(value)
     if value.is_a?(Int32)
       return value.to_s

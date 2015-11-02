@@ -31,11 +31,14 @@ class CrystalApi::Service::EventsService
   end
 
   def update(db_id, params)
-    puts params.inspect
-
     result = @adapter.update_object("events", db_id, params)
     collection = result.rows.map{|r| CrystalApi::Model::Event.new(r[0], r[1].to_s) }
     return collection[0]
+  end
 
+  def delete(db_id)
+    result = @adapter.delete_object("events", db_id)
+    collection = result.rows.map{|r| CrystalApi::Model::Event.new(r[0], r[1].to_s) }
+    return collection[0]
   end
 end

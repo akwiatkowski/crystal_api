@@ -6,7 +6,7 @@ class EventsController < Moonshine::Base::Controller
   include Moonshine::Utils::Shortcuts
   include Moonshine::Base
 
-  actions :index, :show, :create, :update
+  actions :index, :show, :create, :update, :delete
   property :service
 
   def initialize()
@@ -15,7 +15,8 @@ class EventsController < Moonshine::Base::Controller
       "GET /events" => "index",
       "GET /events/:id" => "show",
       "POST /events" => "create",
-      "PUT /events/:id" => "update"
+      "PUT /events/:id" => "update",
+      "DELETE /events/:id" => "delete"
     }
   end
 
@@ -39,15 +40,21 @@ class EventsController < Moonshine::Base::Controller
     ok service.create(object_hash).to_json
   end
 
-  # curl -H "Content-Type: application/json" -X PUT -d '{"event":{"name": "test2"}}' http://localhost:8001/events
+  # curl -H "Content-Type: application/json" -X PUT -d '{"event":{"name": "test2"}}' http://localhost:8001/events/1
   def update(req)
     service = @service as CrystalApi::Service::EventsService
     params = (JSON::Parser.new(req.body).parse) as Hash(String, JSON::Type)
     object_params = params["event"] as Hash(String, JSON::Type)
     db_id = req.params["id"]
     object_hash = {"name" => object_params["name"].to_s}
+
     ok service.update(db_id, object_hash).to_json
   end
 
+  # curl -H "Content-Type: application/json" -X DELETE http://localhost:8001/events/1
+  def delete(req)
+    service = @service as CrystalApi::Service::EventsService
+    ok service.delete(req.params["id"]).to_json
+  end
 
 end
