@@ -33,6 +33,20 @@ class CrystalApi::Pg
     return @db.exec(sql)
   end
 
+  def update_object(collection, db_id, hash)
+    columns = [] of String
+    values = [] of String
+
+    hash.keys.each do |column|
+      columns << column
+      value = hash[column]
+      values << escape_value(value)
+    end
+
+    sql = "update only #{collection} set (#{columns.join(", ")}) = (#{values.join(", ")}) where id = #{db_id} returning *;"
+    return @db.exec(sql)
+  end
+
   def escape_value(value)
     if value.is_a?(Int32)
       return value.to_s
