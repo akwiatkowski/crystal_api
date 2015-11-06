@@ -1,7 +1,7 @@
 require "crystal-pg/pg"
 require "yaml"
 
-class CrystalApi::Pg
+class CrystalApi::PgAdapter
   def initialize
     config = YAML.load(File.read("config/database.yml")) as Hash(YAML::Type, YAML::Type)
     pg_string = "postgres://#{config["host"]}/#{config["database"]}?user=#{config["user"]}&password=#{config["password"]}"

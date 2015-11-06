@@ -1,9 +1,11 @@
 require "moonshine"
 
-require "./controllers/home_controller"
-require "./controllers/events_controller"
+require "./pg_adapter"
+require "./crystal_model"
+require "./crystal_service"
+require "./crystal_controller"
 
-require "./services/events_service"
+require "./controllers/home_controller"
 
 class CrystalApi::App
   include Moonshine
@@ -11,16 +13,19 @@ class CrystalApi::App
 
   def initialize
     @app = Moonshine::Base::App.new
+    @adapter = CrystalApi::PgAdapter.new
 
-    @adapter = CrystalApi::Pg.new
+    #@home_controller = CrystalApi::HomeController.new
 
-    @events_service = CrystalApi::Service::EventsService.new(@adapter)
-    @events_controller = EventsController.new
-    @events_controller.service = @events_service
+    #@events_service = CrystalApi::Service::EventsService.new(@adapter)
+    #@events_controller = EventsController.new
+    #@events_controller.service = @events_service
 
-    @app.controller(HomeController.new)
-    @app.controller(@events_controller)
+    #@app.controller(HomeController.new)
+    #@app.controller(@events_controller)
+  end
 
+  def run
     @app.run(8001)
   end
 

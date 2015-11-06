@@ -1,4 +1,4 @@
-class CrystalApi::HomeController < Moonshine::Base::Controller
+class HomeController < Moonshine::Base::Controller
   include Moonshine
   include Moonshine::Utils::Shortcuts
   include Moonshine::Base
