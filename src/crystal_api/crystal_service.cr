@@ -41,6 +41,10 @@ abstract class CrystalApi::CrystalService
     return collection[0]
   end
 
+  def create_table(db_columns)
+    @adapter.create_table(@table_name, db_columns)
+  end
+
   def self.from_row(r)
     #return CrystalApi::CrystalModel.new(r["id"])
     return nil

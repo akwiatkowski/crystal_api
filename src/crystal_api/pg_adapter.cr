@@ -2,8 +2,12 @@ require "crystal-pg/pg"
 require "yaml"
 
 class CrystalApi::PgAdapter
+  def self.config_path
+    "config/database.yml"
+  end
+
   def initialize
-    config = YAML.load(File.read("config/database.yml")) as Hash(YAML::Type, YAML::Type)
+    config = YAML.load(File.read(self.class.config_path)) as Hash(YAML::Type, YAML::Type)
     pg_string = "postgres://#{config["host"]}/#{config["database"]}?user=#{config["user"]}&password=#{config["password"]}"
 
     @db = PG.connect(pg_string)
@@ -75,12 +79,14 @@ class CrystalApi::PgAdapter
     end
   end
 
-  def create_table(collection)
+  def create_table(collection, columns)
     sql = "create table if not exists #{collection} (
       id serial,
-      name varchar(255),
+      " +
+      columns.map{|a| "#{a} #{columns[a]}"}.join(", ") + ",
       primary key(id)
     )"
+
     return @db.exec(sql)
   end
 end

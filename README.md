@@ -5,11 +5,12 @@ It does not use ORM instead custom SQL queries.
 
 ## Roadmap
 
-- [ ] Fix DB mapping to allow create database - add types of columns to definition list
+- [x] Fix DB mapping to allow create database - add types of columns to definition list
 - [ ] Check and fix JSON mapping
 - [x] Update action
 - [x] Destroy action
-- [ ] Clean Postgres adapter
+- [x] Clean Postgres adapter
+- [x] Rewritten for easier usage (less code needed, a small amount of magic)
 
 ## Installation
 

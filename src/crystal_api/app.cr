@@ -10,10 +10,13 @@ class CrystalApi::App
   def initialize
     @app = Moonshine::Base::App.new
     @adapter = CrystalApi::PgAdapter.new
+    @port
   end
 
+  property :port
+
   def run
-    @app.run
+    @app.run(@port)
   end
 
 end

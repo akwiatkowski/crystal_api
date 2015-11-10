@@ -1,5 +1,11 @@
 require "../src/crystal_api"
 
+class CrystalApi::PgAdapter
+  def self.config_path
+    "config/database.yml"
+  end
+end
+
 class EventModel < CrystalApi::CrystalModel
   def initialize(_db_id, _name)
     @db_id = _db_id as Int32
@@ -13,10 +19,10 @@ class EventModel < CrystalApi::CrystalModel
     "name": String
     })
 
-  DB_COLUMNS = [
-    "id",
-    "name"
-  ]
+  DB_COLUMNS = {
+    #"id" is default
+    "name" => "varchar(255)"
+  }
   DB_TABLE = "events"
 end
 
@@ -24,6 +30,9 @@ class EventsService < CrystalApi::CrystalService
   def initialize(a)
     @adapter = a
     @table_name = EventModel::DB_TABLE
+
+    # create table if not exists
+    create_table(EventModel::DB_COLUMNS)
   end
 
   def self.from_row(rh)
@@ -40,7 +49,7 @@ class EventsController < CrystalApi::CrystalController
       "GET /events/:id" => "show",
       "POST /events" => "create",
       "PUT /events/:id" => "update",
-      "DELETE /events/:id" => "delete"      
+      "DELETE /events/:id" => "delete"
     }
 
     @resource_name = "event"
@@ -55,9 +64,12 @@ class ApiApp < CrystalApi::App
     @events_controller = EventsController.new(@events_service)
 
     @app.controller(@events_controller)
+
+    @port = 8002
   end
 
 end
+
 
 a = ApiApp.new
 a.run
