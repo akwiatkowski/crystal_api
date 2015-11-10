@@ -3,19 +3,18 @@ require "json"
 abstract class CrystalApi::CrystalService
   def initialize(a)
     @adapter = a
-    @columns = ["id"]
+    @table_name = "table"
   end
 
   def index
-    result = @adapter.get_objects("events", @columns)
-    collection = result.rows.map{|r| self.class.from_row(r[0], r[1].to_s) }
-
+    array = @adapter.get_objects(@table_name)
+    collection = array.map{|rh| self.class.from_row(rh) }
     return collection
   end
 
   def show(db_id)
-    result = @adapter.get_objects("events", db_id, @columns)
-    collection = result.rows.map{|r| self.class.from_row(r[0], r[1].to_s) }
+    array = @adapter.get_object(@table_name, db_id)
+    collection = array.map{|rh| self.class.from_row(rh) }
 
     if collection.size == 0
       return nil
@@ -25,25 +24,25 @@ abstract class CrystalApi::CrystalService
   end
 
   def create(params)
-    result = @adapter.insert_object("events", params)
-    collection = result.rows.map{|r| self.class.from_row(r[0], r[1].to_s) }
+    array = @adapter.insert_object(@table_name, params)
+    collection = array.map{|rh| self.class.from_row(rh) }
     return collection[0]
   end
 
   def update(db_id, params)
-    result = @adapter.update_object("events", db_id, params)
-    collection = result.rows.map{|r| self.class.from_row(r[0], r[1].to_s) }
+    array = @adapter.update_object(@table_name, db_id, params)
+    collection = array.map{|rh| self.class.from_row(rh) }
     return collection[0]
   end
 
   def delete(db_id)
-    result = @adapter.delete_object("events", db_id)
-    collection = result.rows.map{|r| self.class.from_row(r[0], r[1].to_s) }
+    array = @adapter.delete_object(@table_name, db_id)
+    collection = array.map{|rh| self.class.from_row(rh) }
     return collection[0]
   end
 
-  def self.from_row(db_id, name)
-    return {id: 1, name: "a"}
-    #return CrystalApi::CrystalModel.new(db_id, name)
+  def self.from_row(r)
+    #return CrystalApi::CrystalModel.new(r["id"])
+    return nil
   end
 end

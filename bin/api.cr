@@ -6,8 +6,7 @@ class EventModel < CrystalApi::CrystalModel
     @name = _name as String
   end
 
-  property :db_id
-  property :name
+  getter :db_id, :name
 
   JSON.mapping({
     "db_id": Int32,
@@ -18,16 +17,17 @@ class EventModel < CrystalApi::CrystalModel
     "id",
     "name"
   ]
+  DB_TABLE = "events"
 end
 
 class EventsService < CrystalApi::CrystalService
   def initialize(a)
     @adapter = a
-    @columns = EventModel::DB_COLUMNS
+    @table_name = EventModel::DB_TABLE
   end
 
-  def self.from_row(db_id, name)
-    return EventModel.new(db_id, name)
+  def self.from_row(rh)
+    return EventModel.new(rh["id"].to_i, rh["name"])
   end
 end
 
@@ -36,8 +36,14 @@ class EventsController < CrystalApi::CrystalController
     @service = s
 
     @router = {
-      "GET /events" => "index"
+      "GET /events" => "index",
+      "GET /events/:id" => "show",
+      "POST /events" => "create",
+      "PUT /events/:id" => "update",
+      "DELETE /events/:id" => "delete"      
     }
+
+    @resource_name = "event"
   end
 end
 

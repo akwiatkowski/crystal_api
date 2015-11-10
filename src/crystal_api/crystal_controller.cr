@@ -9,12 +9,14 @@ abstract class CrystalApi::CrystalController < Moonshine::Base::Controller
     @service = s
 
     @router = {
-      "GET /events" => "index",
-      "GET /events/:id" => "show",
-      "POST /events" => "create",
-      "PUT /events/:id" => "update",
-      "DELETE /events/:id" => "delete"
+      "GET /resources" => "index",
+      "GET /resources/:id" => "show",
+      "POST /resources" => "create",
+      "PUT /resources/:id" => "update",
+      "DELETE /resources/:id" => "delete"
     }
+
+    @resource_name = "resource"
   end
 
   def index(req)
@@ -31,21 +33,17 @@ abstract class CrystalApi::CrystalController < Moonshine::Base::Controller
   def create(req)
     service = @service as CrystalApi::CrystalService
     params = (JSON::Parser.new(req.body).parse) as Hash(String, JSON::Type)
-    object_params = params["event"] as Hash(String, JSON::Type)
-    object_hash = {"name" => object_params["name"].to_s}
-
-    ok service.create(object_hash).to_json
+    object_params = params[@resource_name] as Hash(String, JSON::Type)
+    ok service.create(object_params).to_json
   end
 
   # curl -H "Content-Type: application/json" -X PUT -d '{"event":{"name": "test2"}}' http://localhost:8001/events/1
   def update(req)
     service = @service as CrystalApi::CrystalService
     params = (JSON::Parser.new(req.body).parse) as Hash(String, JSON::Type)
-    object_params = params["event"] as Hash(String, JSON::Type)
+    object_params = params[@resource_name] as Hash(String, JSON::Type)
     db_id = req.params["id"]
-    object_hash = {"name" => object_params["name"].to_s}
-
-    ok service.update(db_id, object_hash).to_json
+    ok service.update(db_id, object_params).to_json
   end
 
   # curl -H "Content-Type: application/json" -X DELETE http://localhost:8001/events/1
