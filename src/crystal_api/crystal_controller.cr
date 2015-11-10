@@ -1,11 +1,21 @@
 abstract class CrystalApi::CrystalController < Moonshine::Base::Controller
-  actions :index
-
   include Moonshine
   include Moonshine::Utils::Shortcuts
   include Moonshine::Base
 
-  property :service
+  actions :index, :show, :create, :update, :delete
+
+  def initialize(s)
+    @service = s
+
+    @router = {
+      "GET /events" => "index",
+      "GET /events/:id" => "show",
+      "POST /events" => "create",
+      "PUT /events/:id" => "update",
+      "DELETE /events/:id" => "delete"
+    }
+  end
 
   def index(req)
     service = @service as CrystalApi::CrystalService
@@ -43,5 +53,4 @@ abstract class CrystalApi::CrystalController < Moonshine::Base::Controller
     service = @service as CrystalApi::CrystalService
     ok service.delete(req.params["id"]).to_json
   end
-
 end
