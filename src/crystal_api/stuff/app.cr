@@ -23,5 +23,4 @@ class CrystalApi::App
 
     @app.run(8001)
   end
-
 end

@@ -9,27 +9,27 @@ end
 class CatModel < CrystalApi::CrystalModel
   def initialize(_db_id, _name, _age, _color)
     @db_id = _db_id as Int32
-    @name = _name as String
-    @age = _age.to_s.to_i as Int32
-    @color = _color as String
+    @name = _name as (String | Nil)
+    @age = _age as (Int32 | Nil) # integer has to be
+    @color = _color as (String | Nil)
   end
 
   getter :db_id, :name, :age, :color
 
   JSON.mapping({
     "db_id": Int32,
-    "name": String,
-    "age": Int32,
-    "color": String
-    })
+    "name":  String,
+    "age":   (Int32 | Nil),
+    "color": String,
+  })
 
   DB_COLUMNS = {
-    #"id" is default
-    "name" => "varchar(255)",
-    "age" => "integer",
-    "color" => "varchar(255)"
-  }
-  DB_TABLE = "cats"
+               # "id" is default
+                 "name"  => "varchar(255)",
+                 "age"   => "integer",
+                 "color" => "varchar(255)",
+               }
+  DB_TABLE   = "cats"
 end
 
 class CatsService < CrystalApi::CrystalService
@@ -40,7 +40,7 @@ class CatsService < CrystalApi::CrystalService
   end
 
   def self.from_row(rh)
-    return CatModel.new(rh["id"].to_i, rh["name"], rh["age"].to_s.to_i, rh["color"])
+    return CatModel.new(rh["id"], rh["name"], rh["age"], rh["color"])
   end
 end
 
@@ -49,12 +49,12 @@ class CatsController < CrystalApi::CrystalController
     @service = s
 
     @router = {
-      "GET /cats" => "index",
-      "GET /cats/:id" => "show",
-      "POST /cats" => "create",
-      "PUT /cats/:id" => "update",
-      "DELETE /cats/:id" => "delete"
-    }
+                "GET /cats"        => "index",
+                "GET /cats/:id"    => "show",
+                "POST /cats"       => "create",
+                "PUT /cats/:id"    => "update",
+                "DELETE /cats/:id" => "delete",
+              }
 
     @resource_name = "cat"
   end
@@ -71,9 +71,7 @@ class ApiApp < CrystalApi::App
 
     @port = 8000
   end
-
 end
-
 
 a = ApiApp.new
 a.run

@@ -14,13 +14,13 @@ class CrystalApi::PgAdapter
   end
 
   def convert_response_to_array(response)
-    array = [] of Hash(String, String) # of String => String)
+    array = [] of Hash(String, (Nil | String | Int32 | Int16 | Int64 | Float32 | Float64 | Bool | Time | Slice(UInt8) | Hash(String, JSON::Type) | Array(JSON::Type) ) )
     response.rows.each do |row|
-      h = Hash(String, String).new
+      h = Hash(String, (Nil | String | Int32 | Int16 | Int64 | Float32 | Float64 | Bool | Time | Slice(UInt8) | Hash(String, JSON::Type) | Array(JSON::Type)) ).new
       response.fields.each_with_index do |field, i|
-        h[ field.name ] = row[i].to_s
-        array << h
+        h[ field.name ] = row[i]
       end
+      array << h
     end
 
     return array

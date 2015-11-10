@@ -11,12 +11,11 @@ class CrystalApi::Model::Event
 
   JSON.mapping({
     "db_id": Int32,
-    "name": String
-    })
+    "name":  String,
+  })
 
   DB_COLUMNS = [
-    "id",
-    "name"
-  ]
-
+                 "id",
+                 "name",
+               ]
 end

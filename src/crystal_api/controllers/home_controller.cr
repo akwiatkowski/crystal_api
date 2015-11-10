@@ -5,16 +5,15 @@ class CrystalApi::HomeController < Moonshine::Base::Controller
 
   actions :index
 
-  def initialize()
+  def initialize
     @viewcount = 0
     @router = {
-      "GET /" => "index",
-    }
+                "GET /" => "index",
+              }
   end
 
   def index(req)
     @viewcount += 1
     ok("This page has been visited #{@viewcount} times.")
   end
-
 end

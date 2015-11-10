@@ -9,20 +9,20 @@ end
 class EventModel < CrystalApi::CrystalModel
   def initialize(_db_id, _name)
     @db_id = _db_id as Int32
-    @name = _name as String
+    @name = _name as (String | Nil)
   end
 
   getter :db_id, :name
 
   JSON.mapping({
     "db_id": Int32,
-    "name": String
-    })
+    "name":  String,
+  })
 
   DB_COLUMNS = {
-    #"id" is default
-    "name" => "varchar(255)"
-  }
+               # "id" is default
+                 "name" => "varchar(255)",
+               }
   DB_TABLE = "events"
 end
 
@@ -36,7 +36,7 @@ class EventsService < CrystalApi::CrystalService
   end
 
   def self.from_row(rh)
-    return EventModel.new(rh["id"].to_i, rh["name"])
+    return EventModel.new(rh["id"], rh["name"])
   end
 end
 
@@ -45,12 +45,12 @@ class EventsController < CrystalApi::CrystalController
     @service = s
 
     @router = {
-      "GET /events" => "index",
-      "GET /events/:id" => "show",
-      "POST /events" => "create",
-      "PUT /events/:id" => "update",
-      "DELETE /events/:id" => "delete"
-    }
+                "GET /events"        => "index",
+                "GET /events/:id"    => "show",
+                "POST /events"       => "create",
+                "PUT /events/:id"    => "update",
+                "DELETE /events/:id" => "delete",
+              }
 
     @resource_name = "event"
   end
@@ -67,9 +67,7 @@ class ApiApp < CrystalApi::App
 
     @port = 8002
   end
-
 end
-
 
 a = ApiApp.new
 a.run

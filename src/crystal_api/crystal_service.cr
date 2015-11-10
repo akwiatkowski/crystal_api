@@ -8,13 +8,13 @@ abstract class CrystalApi::CrystalService
 
   def index
     array = @adapter.get_objects(@table_name)
-    collection = array.map{|rh| self.class.from_row(rh) }
+    collection = array.map { |rh| self.class.from_row(rh) }
     return collection
   end
 
   def show(db_id)
     array = @adapter.get_object(@table_name, db_id)
-    collection = array.map{|rh| self.class.from_row(rh) }
+    collection = array.map { |rh| self.class.from_row(rh) }
 
     if collection.size == 0
       return nil
@@ -25,19 +25,19 @@ abstract class CrystalApi::CrystalService
 
   def create(params)
     array = @adapter.insert_object(@table_name, params)
-    collection = array.map{|rh| self.class.from_row(rh) }
+    collection = array.map { |rh| self.class.from_row(rh) }
     return collection[0]
   end
 
   def update(db_id, params)
     array = @adapter.update_object(@table_name, db_id, params)
-    collection = array.map{|rh| self.class.from_row(rh) }
+    collection = array.map { |rh| self.class.from_row(rh) }
     return collection[0]
   end
 
   def delete(db_id)
     array = @adapter.delete_object(@table_name, db_id)
-    collection = array.map{|rh| self.class.from_row(rh) }
+    collection = array.map { |rh| self.class.from_row(rh) }
     return collection[0]
   end
 
@@ -46,7 +46,15 @@ abstract class CrystalApi::CrystalService
   end
 
   def self.from_row(r)
-    #return CrystalApi::CrystalModel.new(r["id"])
+    # return CrystalApi::CrystalModel.new(r["id"])
     return nil
+  end
+
+  def self.s_to_i(s)
+    if s.strip == ""
+      return nil
+    else
+      return s.to_i
+    end
   end
 end

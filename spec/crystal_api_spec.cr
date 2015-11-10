@@ -6,14 +6,10 @@ describe CrystalApi do
   it "works" do
     a = CrystalApi::App.new
 
-    return false
-
-    server = HTTP::Server.new(8080, a)
+    return false    server = HTTP::Server.new(8080, a)
     server.listen
 
-    return false
-
-    p = CrystalApi::Pg.new
+    return false    p = CrystalApi::Pg.new
 
     t = Time.now.epoch_f
     p.add_event("test")
