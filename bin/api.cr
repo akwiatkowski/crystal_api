@@ -20,9 +20,9 @@ class EventModel < CrystalApi::CrystalModel
   })
 
   DB_COLUMNS = {
-               # "id" is default
-                 "name" => "varchar(255)",
-               }
+    # "id" is default
+    "name" => "varchar(255)",
+  }
   DB_TABLE = "events"
 end
 
@@ -45,12 +45,12 @@ class EventsController < CrystalApi::CrystalController
     @service = s
 
     @router = {
-                "GET /events"        => "index",
-                "GET /events/:id"    => "show",
-                "POST /events"       => "create",
-                "PUT /events/:id"    => "update",
-                "DELETE /events/:id" => "delete",
-              }
+      "GET /events"        => "index",
+      "GET /events/:id"    => "show",
+      "POST /events"       => "create",
+      "PUT /events/:id"    => "update",
+      "DELETE /events/:id" => "delete",
+    }
 
     @resource_name = "event"
   end
@@ -63,7 +63,7 @@ class ApiApp < CrystalApi::App
     @events_service = EventsService.new(@adapter)
     @events_controller = EventsController.new(@events_service)
 
-    @app.controller(@events_controller)
+    add_controller(@events_controller)
 
     @port = 8002
   end

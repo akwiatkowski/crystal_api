@@ -4,11 +4,11 @@ class NotesController < CrystalApi::Controller
   def initialize
     @viewcount = 0
     @router = {
-                "GET /events"        => "index",
-                "GET /events/:id"    => "show",
-                "POST /events"       => "create",
-                "PUT /events/:id"    => "update",
-                "DELETE /events/:id" => "delete",
-              }
+      "GET /events"        => "index",
+      "GET /events/:id"    => "show",
+      "POST /events"       => "create",
+      "PUT /events/:id"    => "update",
+      "DELETE /events/:id" => "delete",
+    }
   end
 end

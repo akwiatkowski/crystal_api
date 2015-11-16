@@ -8,8 +8,8 @@ class HomeController < Moonshine::Base::Controller
   def initialize
     @viewcount = 0
     @router = {
-                "GET /" => "index",
-              }
+      "GET /" => "index",
+    }
   end
 
   def index(req)

@@ -5,16 +5,18 @@ abstract class CrystalApi::CrystalController < Moonshine::Base::Controller
 
   actions :index, :show, :create, :update, :delete
 
+  getter :resource_name, :router
+
   def initialize(s)
     @service = s
 
     @router = {
-                "GET /resources"        => "index",
-                "GET /resources/:id"    => "show",
-                "POST /resources"       => "create",
-                "PUT /resources/:id"    => "update",
-                "DELETE /resources/:id" => "delete",
-              }
+      "GET /resources"        => "index",
+      "GET /resources/:id"    => "show",
+      "POST /resources"       => "create",
+      "PUT /resources/:id"    => "update",
+      "DELETE /resources/:id" => "delete",
+    }
 
     @resource_name = "resource"
   end

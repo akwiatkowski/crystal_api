@@ -15,7 +15,7 @@ class CrystalApi::Model::Event
   })
 
   DB_COLUMNS = [
-                 "id",
-                 "name",
-               ]
+    "id",
+    "name",
+  ]
 end
