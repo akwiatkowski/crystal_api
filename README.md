@@ -19,7 +19,7 @@ Toolset for creating REST Api in Crystal Language.
 
 2. Add `crystal_api` to `shard.yml`. Example:
 
-    ```
+    ```Yaml
     name: crystal_api_sample
     version: 0.1.0
 
@@ -40,7 +40,7 @@ Toolset for creating REST Api in Crystal Language.
 4. Create Postgresql connection file in `config/database.yml` using sample
    from `config/database.yml.sample` from `crystal_api` repository.
 
-    ```
+    ```Yaml
     host: localhost
     database: crystal
     user: crystal_user
@@ -49,7 +49,7 @@ Toolset for creating REST Api in Crystal Language.
 
 5. Set path to Postgresql config file by adding in `src/crystal_api_sample.cr`
 
-    ```
+    ```Crystal
     class CrystalApi::PgAdapter
       def self.config_path
         "config/database.yml"
@@ -59,7 +59,7 @@ Toolset for creating REST Api in Crystal Language.
 
 6. Create model representing data fetched from Postgresql:
 
-    ```
+    ```Crystal
     class EventModel < CrystalApi::CrystalModel
       def initialize(_db_id, _name)
         @db_id = _db_id as Int32
@@ -91,7 +91,7 @@ Toolset for creating REST Api in Crystal Language.
 
 7. Create service class which performs DB operations.
 
-    ```
+    ```Crystal
     class EventsService < CrystalApi::CrystalService
       def initialize(a)
         @adapter = a
@@ -114,7 +114,7 @@ Toolset for creating REST Api in Crystal Language.
 
 8. Create controller class with defined route paths.
 
-    ```
+    ```Crystal
     class EventsController < CrystalApi::CrystalController
       def initialize(s)
         @service = s
@@ -138,7 +138,7 @@ Toolset for creating REST Api in Crystal Language.
 
 9. Create app class
 
-    ```
+    ```Crystal
     class ApiApp < CrystalApi::App
       def initialize
         super
@@ -161,7 +161,7 @@ Toolset for creating REST Api in Crystal Language.
 
 10. You can now run it
 
-    ```
+    ```Crystal
     a = ApiApp.new
     a.run
     ```
