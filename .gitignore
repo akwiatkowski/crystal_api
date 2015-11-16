@@ -4,3 +4,7 @@
 /.shards/
 
 config/database.yml
+
+sample/config/database.yml
+sample/.crystal/
+sample/.shards/
