@@ -11,7 +11,7 @@ require "./home_controller"
 
 class CrystalApi::App
   def initialize
-    @app = Moonshine::Base::App.new
+    @app = Moonshine::Core::App.new
     @app.middleware_object CrystalApi::CrystalLogger.new
 
     @home_controller = CrystalApi::HomeController.new

@@ -1,7 +1,7 @@
-abstract class CrystalApi::CrystalController < Moonshine::Base::Controller
+abstract class CrystalApi::CrystalController < Moonshine::Controller
   include Moonshine
   include Moonshine::Utils::Shortcuts
-  include Moonshine::Base
+  #include Moonshine::Core::Middleware
 
   actions :index, :show, :create, :update, :delete
 

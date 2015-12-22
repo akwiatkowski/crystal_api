@@ -1,7 +1,7 @@
-class CrystalApi::HomeController < Moonshine::Base::Controller
+class CrystalApi::HomeController < Moonshine::Controller
   include Moonshine
   include Moonshine::Utils::Shortcuts
-  include Moonshine::Base
+  #include Moonshine::Core::Middleware
 
   actions :index, :help
 

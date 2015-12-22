@@ -1,6 +1,6 @@
 require "logger"
 
-class CrystalApi::CrystalLogger < Moonshine::Middleware::Base
+class CrystalApi::CrystalLogger < Moonshine::Middleware
   def initialize
     @logger = Logger.new(STDOUT)
     @logger.level = Logger::DEBUG
@@ -10,10 +10,13 @@ class CrystalApi::CrystalLogger < Moonshine::Middleware::Base
     end
 
     @enabled = true
+
+    @t = Time.now
   end
 
   def process_request(req)
     @t = Time.now
+    nil
   end
 
   def process_response(req, res)
