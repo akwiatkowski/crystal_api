@@ -1,6 +1,6 @@
 require "moonshine"
 
-require "./pg_adapter"
+require "./adapters/pg_adapter"
 
 require "./crystal_logger"
 require "./crystal_model"
@@ -9,17 +9,17 @@ require "./controllers/*"
 
 
 class CrystalApi::App
-  def initialize
+  def initialize(a)
+    @adapter = a
+
     @app = Moonshine::Core::App.new
     @app.middleware_object CrystalApi::CrystalLogger.new
 
     @home_controller = CrystalApi::Controllers::HomeController.new
-
-    @adapter = CrystalApi::PgAdapter.new
     @port = 8000
   end
 
-  property :port
+  property :port, :adapter
 
   def add_controller(c)
     @home_controller.register_controller(c)

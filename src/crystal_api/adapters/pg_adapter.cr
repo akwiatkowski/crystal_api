@@ -1,7 +1,7 @@
 require "crystal-pg/pg"
 require "yaml"
 
-class CrystalApi::PgAdapter
+class CrystalApi::Adapters::PgAdapter
   def self.config_path
     "config/database.yml"
   end
