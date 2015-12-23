@@ -40,7 +40,7 @@ class EventsService < CrystalApi::CrystalService
   end
 end
 
-class EventsController < CrystalApi::CrystalController
+class EventsController < CrystalApi::Controllers::JsonRestApiController
   def initialize(s)
     @service = s
 

@@ -1,7 +1,9 @@
-abstract class CrystalApi::CrystalController < Moonshine::Controller
+require "./utils"
+
+abstract class CrystalApi::Controllers::JsonRestApiController < Moonshine::Controller
   include Moonshine
   include Moonshine::Utils::Shortcuts
-  #include Moonshine::Core::Middleware
+  include CrystalApi::Controllers::Utils
 
   actions :index, :show, :create, :update, :delete
 
@@ -28,7 +30,16 @@ abstract class CrystalApi::CrystalController < Moonshine::Controller
 
   def show(req)
     service = @service as CrystalApi::CrystalService
-    ok service.show(req.params["id"]).to_json
+    resource = service.show(req.params["id"])
+
+    if resource
+      response = ok(resource.to_json)
+    else
+      response = not_found
+    end
+
+    set_json_headers(response)
+    return response
   end
 
   # curl -H "Content-Type: application/json" -X POST -d '{"event":{"name": "test1"}}' http://localhost:8001/events
