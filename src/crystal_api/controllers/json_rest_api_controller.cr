@@ -48,7 +48,7 @@ abstract class CrystalApi::Controllers::JsonRestApiController < Moonshine::Contr
     else
       response = not_found
     end
-    
+
     add_time_cost_headers(response, ts)
     set_json_headers(response)
     return response
@@ -59,7 +59,20 @@ abstract class CrystalApi::Controllers::JsonRestApiController < Moonshine::Contr
     service = @service as CrystalApi::CrystalService
     params = (JSON::Parser.new(req.body).parse) as Hash(String, JSON::Type)
     object_params = params[@resource_name] as Hash(String, JSON::Type)
-    ok service.create(object_params).to_json
+
+    t = t_from
+    resource = service.create(object_params)
+    ts = t_diff(t)
+
+    if resource
+      response = ok(resource.to_json)
+    else
+      response = bad_request
+    end
+
+    add_time_cost_headers(response, ts)
+    set_json_headers(response)
+    return response
   end
 
   # curl -H "Content-Type: application/json" -X PUT -d '{"event":{"name": "test2"}}' http://localhost:8001/events/1
@@ -68,12 +81,38 @@ abstract class CrystalApi::Controllers::JsonRestApiController < Moonshine::Contr
     params = (JSON::Parser.new(req.body).parse) as Hash(String, JSON::Type)
     object_params = params[@resource_name] as Hash(String, JSON::Type)
     db_id = req.params["id"]
-    ok service.update(db_id, object_params).to_json
+
+    t = t_from
+    resource = service.update(db_id, object_params)
+    ts = t_diff(t)
+
+    if resource
+      response = ok(resource.to_json)
+    else
+      response = not_found
+    end
+
+    add_time_cost_headers(response, ts)
+    set_json_headers(response)
+    return response
   end
 
   # curl -H "Content-Type: application/json" -X DELETE http://localhost:8001/events/1
   def delete(req)
     service = @service as CrystalApi::CrystalService
-    ok service.delete(req.params["id"]).to_json
+
+    t = t_from
+    resource = service.delete(req.params["id"])
+    ts = t_diff(t)
+
+    if resource
+      response = ok(resource.to_json)
+    else
+      response = not_found
+    end
+
+    add_time_cost_headers(response, ts)
+    set_json_headers(response)
+    return response
   end
 end

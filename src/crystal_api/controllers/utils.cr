@@ -21,4 +21,8 @@ module CrystalApi::Controllers::Utils
   def t_diff(t)
     return ((Time.now.epoch_f - t) * 1000_000.0).round
   end
+
+  def bad_request
+    return Response.new(404, "Bad request")
+  end
 end
