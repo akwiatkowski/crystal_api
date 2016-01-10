@@ -25,19 +25,31 @@ abstract class CrystalApi::Controllers::JsonRestApiController < Moonshine::Contr
 
   def index(req)
     service = @service as CrystalApi::CrystalService
-    ok service.index.to_json
+
+    t = t_from
+    collection = service.index
+    ts = t_diff(t)
+
+    response = ok(collection.to_json)
+    add_time_cost_headers(response, ts)
+    set_json_headers(response)
+    return response
   end
 
   def show(req)
     service = @service as CrystalApi::CrystalService
+
+    t = t_from
     resource = service.show(req.params["id"])
+    ts = t_diff(t)
 
     if resource
       response = ok(resource.to_json)
     else
       response = not_found
     end
-
+    
+    add_time_cost_headers(response, ts)
     set_json_headers(response)
     return response
   end

@@ -3,14 +3,14 @@ require "./utils"
 class CrystalApi::Controllers::HomeController < Moonshine::Controller
   include Moonshine
   include Moonshine::Utils::Shortcuts
-  include Utils
+  include CrystalApi::Controllers::Utils
 
   actions :index, :help
 
   def initialize
     @started_at = Time.now
     @router = {
-      "GET /"       => "index",
+      "GET /hello"  => "index",
       "GET /routes" => "help",
     }
 
@@ -20,7 +20,9 @@ class CrystalApi::Controllers::HomeController < Moonshine::Controller
   end
 
   def index(req)
-    ok "Welcome to CrystalApi instance. Uptime #{Time.now - @started_at}. Check GET /routes to list of all endpoints."
+    response = ok({"message" => "Welcome to CrystalApi instance. Uptime #{Time.now - @started_at}. Check GET /routes to list of all endpoints."}.to_json)
+    set_json_headers(response)
+    return response
   end
 
   def help(req)

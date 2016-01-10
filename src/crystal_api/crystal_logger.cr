@@ -20,7 +20,14 @@ class CrystalApi::CrystalLogger < Moonshine::Middleware
   end
 
   def process_response(req, res)
-    ts = Time.now - @t as Time
-    @logger.debug("#{req.method}  #{req.path} in #{ts.to_f * 1000_000} us")
+    ts = (Time.now - (@t as Time)).to_f * 1000_000
+    res.set_header("X-time-req", ts.to_s)
+
+    db_s = ""
+    if res.headers.has_key?("X-time-db")
+      db_s += " (#{res.headers["X-time-db"]} db us)"
+    end
+
+    @logger.debug("#{req.method}  #{req.path} in #{ts} us#{db_s}")
   end
 end

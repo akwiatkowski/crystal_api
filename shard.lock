@@ -6,5 +6,5 @@ shards:
 
   moonshine:
     github: dhruvrajvanshi/Moonshine
-    version: HEAD
+    commit: 83070cd3f811b76385f4cbdc641d5626b113baab
 

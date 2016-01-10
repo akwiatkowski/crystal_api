@@ -2,6 +2,8 @@ require "crystal-pg/pg"
 require "yaml"
 
 class CrystalApi::Adapters::PgAdapter
+  alias PgType = Nil | String | Int16 | Int32 | Int64 | Float32 | Float64 | Bool | Time | Slice(UInt8) | Hash(String, JSON::Any) | Array(JSON::Any) | JSON::Any
+
   def self.config_path
     "config/database.yml"
   end
@@ -14,9 +16,9 @@ class CrystalApi::Adapters::PgAdapter
   end
 
   def convert_response_to_array(response)
-    array = [] of Hash(String, (Nil | String | Int32 | Int16 | Int64 | Float32 | Float64 | Bool | Time | Slice(UInt8) | Hash(String, JSON::Type) | Array(JSON::Type) ) )
+    array = [] of Hash(String, PgType)
     response.rows.each do |row|
-      h = Hash(String, (Nil | String | Int32 | Int16 | Int64 | Float32 | Float64 | Bool | Time | Slice(UInt8) | Hash(String, JSON::Type) | Array(JSON::Type)) ).new
+      h = Hash(String, PgType).new
       response.fields.each_with_index do |field, i|
         h[ field.name ] = row[i]
       end
