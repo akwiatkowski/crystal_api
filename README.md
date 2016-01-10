@@ -9,7 +9,12 @@ Toolset for creating REST Api in Crystal Language.
 - [x] Update action
 - [x] Destroy action
 - [x] Clean Postgres adapter
-- [x] Rewritten for easier usage (less code needed, a small amount of magic)
+- [x] Rewrite for easier usage as lib
+- [x] JSON response header
+- [ ] Other DB engines (partially refactored)
+- [ ] More predefined/sample controllers
+- [ ] Websockets
+- [ ] DB inline config (no confi file needed)
 
 ## Usage
 
@@ -115,7 +120,7 @@ Toolset for creating REST Api in Crystal Language.
 8. Create controller class with defined route paths.
 
     ```Crystal
-    class EventsController < CrystalApi::CrystalController
+    class EventsController < CrystalApi::CrystalApi::Controllers::JsonRestApiController
       def initialize(s)
         @service = s
 
@@ -135,13 +140,15 @@ Toolset for creating REST Api in Crystal Language.
     Notes:
 
     * `@resource_name` is used in `update` and `create`
+    * instead of `CrystalApi::CrystalController` please use
+      `CrystalApi::Controllers::JsonRestApiController`
 
 9. Create app class
 
     ```Crystal
     class ApiApp < CrystalApi::App
-      def initialize
-        super
+      def initialize(a)
+        super(a)
 
         @events_service = EventsService.new(@adapter)
         @events_controller = EventsController.new(@events_service)
@@ -157,55 +164,60 @@ Toolset for creating REST Api in Crystal Language.
 
     * `super` is important
     * service and controller must be initialized here and controller must be added
-    * default port is 8000  
+    * default port is 8000
+    * `initialize` utilize DB adapter class now  
 
 10. You can now run it
 
     ```Crystal
-    a = ApiApp.new
+    a = ApiApp.new( DbAdapter.new )
     a.run
     ```
 
+    Notes:
+
+    * you must provide DB adapter instance for `ApiApp` constructor
+
 ## Index
 
-GET http://localhost:8001/events
+GET http://localhost:8002/events
 
 ```
-curl -H "Content-Type: application/json" -X GET http://localhost:8001/events
+curl -H "Content-Type: application/json" -X GET http://localhost:8002/events
 ```
 
 ## Show
 
-GET http://localhost:8001/events/:id
+GET http://localhost:8002/events/:id
 
 ```
-curl -H "Content-Type: application/json" -X GET http://localhost:8001/events/1
+curl -H "Content-Type: application/json" -X GET http://localhost:8002/events/1
 ```
 
 But first create an Event :)
 
 ## Create
 
-POST http://localhost:8001/events
+POST http://localhost:8002/events
 
 ```
-curl -H "Content-Type: application/json" -X POST -d '{"event":{"name": "test1"}}' http://localhost:8001/events
+curl -H "Content-Type: application/json" -X POST -d '{"event":{"name": "test1"}}' http://localhost:8002/events
 ```
 
 ## Update
 
-PUT http://localhost:8001/events/:id
+PUT http://localhost:8002/events/:id
 
 ```
-curl -H "Content-Type: application/json" -X PUT -d '{"event":{"name": "test2"}}' http://localhost:8001/events/1
+curl -H "Content-Type: application/json" -X PUT -d '{"event":{"name": "test2"}}' http://localhost:8002/events/1
 ```
 
 ## Delete
 
-DELETE http://localhost:8001/events/:id
+DELETE http://localhost:8002/events/:id
 
 ```
-curl -H "Content-Type: application/json" -X DELETE http://localhost:8001/events/1
+curl -H "Content-Type: application/json" -X DELETE http://localhost:8002/events/1
 ```
 
 

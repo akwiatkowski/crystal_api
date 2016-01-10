@@ -3,12 +3,6 @@ require "../src/crystal_api"
 class DbAdapter < CrystalApi::Adapters::PgAdapter
 end
 
-# class CrystalApi::Adapters::PgAdapter
-#   def self.config_path
-#     "config/database.yml"
-#   end
-# end
-
 class EventModel < CrystalApi::CrystalModel
   def initialize(_db_id, _name)
     @db_id = _db_id as Int32
@@ -62,7 +56,7 @@ end
 class ApiApp < CrystalApi::App
   def initialize(a)
     super(a)
-    
+
     @events_service = EventsService.new(@adapter)
     @events_controller = EventsController.new(@events_service)
 
