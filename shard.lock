@@ -1,10 +1,18 @@
 version: 1.0
 shards:
-  crystal-pg:
+  kemal:
+    github: sdogruyol/kemal
+    version: 0.9.2
+
+  kilt:
+    github: jeromegn/kilt
+    version: 0.3.0
+
+  pg:
     github: will/crystal-pg
     version: 0.5.0
 
-  moonshine:
-    github: dhruvrajvanshi/Moonshine
-    commit: 83070cd3f811b76385f4cbdc641d5626b113baab
+  radix:
+    github: luislavena/radix
+    version: 0.1.0
 

@@ -2,6 +2,9 @@
 
 Toolset for creating REST Api in Crystal Language.
 
+[![Dependency Status](https://shards.rocks/badge/github/akwiatkowski/crystal_api/status.svg)](https://shards.rocks/github/akwiatkowski/crystal_api)
+[![devDependency Status](https://shards.rocks/badge/github/akwiatkowski/crystal_api/dev_status.svg)](https://shards.rocks/github/akwiatkowski/crystal_api)
+
 ## Roadmap
 
 - [x] Fix DB mapping to allow create database - add types of columns to definition list
@@ -14,7 +17,7 @@ Toolset for creating REST Api in Crystal Language.
 - [ ] Other DB engines (partially refactored)
 - [ ] More predefined/sample controllers
 - [ ] Websockets
-- [ ] DB inline config (no confi file needed)
+- [ ] DB inline config (no config file needed)
 
 ## Usage
 

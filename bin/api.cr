@@ -13,7 +13,7 @@ class EventModel < CrystalApi::CrystalModel
 
   JSON.mapping({
     "db_id": Int32,
-    "name":  String,
+    "name":  (String | Nil),
   })
 
   DB_COLUMNS = {
@@ -41,30 +41,21 @@ class EventsController < CrystalApi::Controllers::JsonRestApiController
   def initialize(s)
     @service = s
 
-    @router = {
-      "GET /events"        => "index",
-      "GET /events/:id"    => "show",
-      "POST /events"       => "create",
-      "PUT /events/:id"    => "update",
-      "DELETE /events/:id" => "delete",
-    }
+    @actions = [
+      "index",
+      "show",
+      "create",
+      "update",
+      "delete"
+    ] of String
 
+    @path = "/events"
     @resource_name = "event"
   end
 end
 
-class ApiApp < CrystalApi::App
-  def initialize(a)
-    super(a)
-
-    @events_service = EventsService.new(@adapter)
-    @events_controller = EventsController.new(@events_service)
-
-    add_controller(@events_controller)
-
-    @port = 8002
-  end
-end
-
-a = ApiApp.new( DbAdapter.new )
-a.run
+a = CrystalApi::App.new
+a.port = 8002
+a.add_controller( CrystalApi::Controllers::HomeController.new )
+a.add_controller( EventsController.new(EventsService.new(DbAdapter.new)) )
+a.start

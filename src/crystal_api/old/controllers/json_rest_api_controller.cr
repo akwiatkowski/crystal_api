@@ -1,80 +1,57 @@
-require "./base_controller"
-require "../json_messages"
+require "./utils"
 
-abstract class CrystalApi::Controllers::JsonRestApiController < CrystalApi::Controllers::BaseController
-  #include CrystalApi::Controllers::Utils
+abstract class CrystalApi::Controllers::JsonRestApiController < Moonshine::Controller
+  include Moonshine
+  include Moonshine::Utils::Shortcuts
+  include CrystalApi::Controllers::Utils
+
+  actions :index, :show, :create, :update, :delete
 
   getter :resource_name, :router
 
   def initialize(s)
     @service = s
 
-    @actions = [
-      "index",
-      "show",
-      "create",
-      "update",
-      "delete"
-    ] of String
-
-    @path = "/resources"
-
-    # @router = {
-    #   "GET /resources"        => "index",
-    #   "GET /resources/:id"    => "show",
-    #   "POST /resources"       => "create",
-    #   "PUT /resources/:id"    => "update",
-    #   "DELETE /resources/:id" => "delete",
-    # }
+    @router = {
+      "GET /resources"        => "index",
+      "GET /resources/:id"    => "show",
+      "POST /resources"       => "create",
+      "PUT /resources/:id"    => "update",
+      "DELETE /resources/:id" => "delete",
+    }
 
     @resource_name = "resource"
   end
 
-  def prepare_routes(route_handler : CrystalApi::RouteHandler)
-    if @actions.includes?("index")
-      route_handler.add_route("GET", @path) do |context|
-        index(context)
-      end
-    end
-
-    if @actions.includes?("show")
-      route_handler.add_route("GET", @path + "/:id") do |context|
-        show(context)
-      end
-    end
-  end
-
-  def index(context)
-    context.set_json_headers
+  def index(req)
     service = @service as CrystalApi::CrystalService
 
-    context.mark_time_pre_db
+    t = t_from
     collection = service.index
-    context.mark_time_post_db
+    ts = t_diff(t)
 
-    response = collection.to_json
-    context.set_time_cost_headers
-    context.set_status_ok
-
+    response = ok(collection.to_json)
+    add_time_cost_headers(response, ts)
+    set_json_headers(response)
     return response
   end
 
-  def show(context)
-    context.set_json_headers
+  def show(req)
     service = @service as CrystalApi::CrystalService
 
-    context.mark_time_pre_db
-    resource = service.show(context.params["id"])
-    context.mark_time_post_db
+    t = t_from
+    resource = service.show(req.params["id"])
+    ts = t_diff(t)
 
     if resource
-      context.set_status_ok
-      context.set_time_cost_headers
-      return resource.to_json
+      response = ok(resource.to_json)
     else
-      context.set_error_not_found
-      return JsonMessages.not_found
+      response = not_found
     end
+
+    add_time_cost_headers(response, ts)
+    set_json_headers(response)
+    return response
   end
 
   # curl -H "Content-Type: application/json" -X POST -d '{"event":{"name": "test1"}}' http://localhost:8001/events
