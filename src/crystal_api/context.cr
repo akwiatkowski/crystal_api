@@ -29,8 +29,17 @@ class HTTP::Server::Context
     response.status_code = 200
   end
 
+  def set_status_created
+    response.status_code = 201
+  end
+
   def set_error_not_found
     response.status_code = 404
   end
+
+  def set_error_bad_request
+    response.status_code = 400
+  end
+
 
 end
