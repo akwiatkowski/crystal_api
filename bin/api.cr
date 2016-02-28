@@ -47,15 +47,14 @@ class EventsController < CrystalApi::Controllers::JsonRestApiController
       "create",
       "update",
       "delete"
-    ] of String
+    ]
 
     @path = "/events"
     @resource_name = "event"
   end
 end
 
-a = CrystalApi::App.new
+a = CrystalApi::App.new(DbAdapter.new(config_path: "config/database.yml"))
 a.port = 8002
-a.add_controller( CrystalApi::Controllers::HomeController.new )
-a.add_controller( EventsController.new(EventsService.new(DbAdapter.new)) )
+a.add_controller( EventsController.new(EventsService.new(a.adapter)) )
 a.start

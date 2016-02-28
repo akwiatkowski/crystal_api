@@ -16,22 +16,22 @@ require "./controllers/home_controller"
 require "./controllers/json_rest_api_controller"
 
 class CrystalApi::App
-  property :port
+  property :port, :home_controller_enabled
+  getter :adapter
 
-  def initialize
+  def initialize(db_adapter)
     @port = 8002
+    @home_controller_enabled = true
+
+    @adapter = db_adapter
     @route_handler = CrystalApi::RouteHandler.new
     @controllers = Array(CrystalApi::Controllers::BaseController).new
+
+    @home_controller = CrystalApi::Controllers::HomeController.new
   end
 
   def add_controller(controller)
     @controllers << controller
-  end
-
-  def prepare_routes
-    @controllers.each do |controller|
-      controller.prepare_routes(@route_handler)
-    end
   end
 
   def start
@@ -40,4 +40,19 @@ class CrystalApi::App
     server = HTTP::Server.new(@port, [HTTP::LogHandler.new(STDOUT), @route_handler])
     server.listen
   end
+
+  def run
+    start
+  end
+
+  private def prepare_routes
+    if home_controller_enabled
+      add_controller(@home_controller)
+    end
+
+    @controllers.each do |controller|
+      controller.prepare_routes(@route_handler)
+    end
+  end
+
 end
