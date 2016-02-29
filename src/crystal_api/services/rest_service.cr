@@ -1,6 +1,6 @@
 require "json"
 
-abstract class CrystalApi::CrystalService
+abstract class CrystalApi::RestService
   def initialize(a)
     @adapter = a
     @table_name = "table"
@@ -13,7 +13,7 @@ abstract class CrystalApi::CrystalService
   end
 
   def show(db_id)
-    array = @adapter.get_object(@table_name, db_id)
+    array = @adapter.get_object_by_id(@table_name, db_id)
     collection = array.map { |rh| self.class.from_row(rh) }
 
     if collection.size == 0

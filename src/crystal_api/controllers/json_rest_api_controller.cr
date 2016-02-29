@@ -65,7 +65,7 @@ abstract class CrystalApi::Controllers::JsonRestApiController < CrystalApi::Cont
 
   def index(context)
     context.set_json_headers
-    service = @service as CrystalApi::CrystalService
+    service = @service as CrystalApi::RestService
 
     context.mark_time_pre_db
     collection = service.index
@@ -80,7 +80,7 @@ abstract class CrystalApi::Controllers::JsonRestApiController < CrystalApi::Cont
 
   def show(context)
     context.set_json_headers
-    service = @service as CrystalApi::CrystalService
+    service = @service as CrystalApi::RestService
 
     context.mark_time_pre_db
     resource = service.show(context.params["id"])
@@ -99,7 +99,7 @@ abstract class CrystalApi::Controllers::JsonRestApiController < CrystalApi::Cont
   # curl -H "Content-Type: application/json" -X POST -d '{"event":{"name": "test1"}}' http://localhost:8002/events
   def create(context)
     context.set_json_headers
-    service = @service as CrystalApi::CrystalService
+    service = @service as CrystalApi::RestService
     object_params = context.params[@resource_name] as Hash(String, JSON::Type)
 
     context.mark_time_pre_db
@@ -119,7 +119,7 @@ abstract class CrystalApi::Controllers::JsonRestApiController < CrystalApi::Cont
   # curl -H "Content-Type: application/json" -X PUT -d '{"event":{"name": "test2"}}' http://localhost:8002/events/2
   def update(context)
     context.set_json_headers
-    service = @service as CrystalApi::CrystalService
+    service = @service as CrystalApi::RestService
     object_params = context.params[@resource_name] as Hash(String, JSON::Type)
     db_id = context.params["id"]
 
@@ -140,7 +140,7 @@ abstract class CrystalApi::Controllers::JsonRestApiController < CrystalApi::Cont
   # curl -H "Content-Type: application/json" -X DELETE http://localhost:8002/events/2
   def delete(context)
     context.set_json_headers
-    service = @service as CrystalApi::CrystalService
+    service = @service as CrystalApi::RestService
 
     context.mark_time_pre_db
     resource = service.delete(context.params["id"])

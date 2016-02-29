@@ -44,13 +44,34 @@ class CrystalApi::Adapters::PgAdapter
     return array
   end
 
-  def get_objects(collection)
-    sql = "select * from #{collection};"
+  def get_all_objects(collection)
+    sql = "select * from #{collection} where id = 1;"
     return convert_response_to_array(db.exec(sql))
   end
 
-  def get_object(collection, db_id)
+  def get_objects(collection, conditions = [] of String)
+    sql = "select * from #{collection}"
+    sql += conditions_to_where(conditions)
+    sql += ";"
+    return convert_response_to_array(db.exec(sql))
+  end
+
+  def conditions_to_where(conditions = [] of String)
+    return "" if conditions.size == 0
+    return " where " + conditions.join(" and ")
+  end
+
+  def get_object_by_id(collection, db_id)
     sql = "select * from #{collection} where id = #{db_id};"
+    return convert_response_to_array(db.exec(sql))
+  end
+
+  def get_object(collection, conditions = [] of String, limit = 1)
+    sql = "select * from #{collection}"
+    sql += conditions_to_where(conditions)
+    sql += " limit #{limit}" if limit > 0
+    sql += ";"
+
     return convert_response_to_array(db.exec(sql))
   end
 

@@ -9,5 +9,7 @@ dependencies:
     github: "will/crystal-pg"
   kemal:
     github: sdogruyol/kemal
-
+  jwt:
+    github: greyblake/crystal-jwt
+    
 license: LGPLv3

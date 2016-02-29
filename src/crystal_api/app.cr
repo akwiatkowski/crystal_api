@@ -9,11 +9,14 @@ require "./route_handler"
 
 require "./adapters/pg_adapter"
 require "./crystal_model"
-require "./crystal_service"
+
+require "./services/rest_service"
+require "./services/devise_session_service"
 
 require "./controllers/base_controller"
 require "./controllers/home_controller"
 require "./controllers/json_rest_api_controller"
+require "./controllers/devise_session_controller"
 
 class CrystalApi::App
   property :port, :home_controller_enabled
