@@ -6,9 +6,11 @@ require "kemal/kemal/exceptions"
 
 require "./context"
 require "./route_handler"
+require "./auth_route_handler"
 
 require "./adapters/pg_adapter"
 require "./crystal_model"
+require "./crystal_auth"
 
 require "./services/rest_service"
 require "./services/devise_session_service"
@@ -27,7 +29,9 @@ class CrystalApi::App
     @home_controller_enabled = true
 
     @adapter = db_adapter
-    @route_handler = CrystalApi::RouteHandler.new
+
+    @logger = HTTP::LogHandler.new(STDOUT)
+    @route_handler = CrystalApi::AuthRouteHandler.new
     @controllers = Array(CrystalApi::Controllers::BaseController).new
 
     @home_controller = CrystalApi::Controllers::HomeController.new
@@ -37,10 +41,15 @@ class CrystalApi::App
     @controllers << controller
   end
 
+  def auth
+    @route_handler.auth
+  end
+
   def start
     prepare_routes
 
-    server = HTTP::Server.new(@port, [HTTP::LogHandler.new(STDOUT), @route_handler])
+    server = HTTP::Server.new(@port, [@logger, @route_handler])
+    puts "Running"
     server.listen
   end
 

@@ -23,7 +23,7 @@ class EventModel < CrystalApi::CrystalModel
   DB_TABLE = "events"
 end
 
-class EventsService < CrystalApi::CrystalService
+class EventsService < CrystalApi::RestService
   def initialize(a)
     @adapter = a
     @table_name = EventModel::DB_TABLE

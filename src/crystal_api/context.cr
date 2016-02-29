@@ -4,6 +4,8 @@ class HTTP::Server::Context
   @time_mark : (Float64 | Nil)
   @db_time_cost : (Float64 | Nil)
 
+  property :get_user_from_token_f
+
   def mark_time_pre_db
     @time_mark = Time.now.epoch_f
   end
@@ -41,5 +43,8 @@ class HTTP::Server::Context
     response.status_code = 400
   end
 
+  def set_error_forbidden
+    response.status_code = 403
+  end
 
 end

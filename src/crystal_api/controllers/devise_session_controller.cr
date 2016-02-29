@@ -47,12 +47,16 @@ abstract class CrystalApi::Controllers::DeviseSessionApiController < CrystalApi:
   end
 
   def token_to_user(token)
-    payload, header = JWT.decode(token, @secret, "HS256")
-    if payload.is_a?(Hash) && payload.has_key?("user_id")
-      user_id = payload["user_id"]
-      service = @service as CrystalApi::DeviseSessionService
-      user = service.get_user(user_id)
-      return user
+    begin
+      payload, header = JWT.decode(token, @secret, "HS256")
+      if payload.is_a?(Hash) && payload.has_key?("user_id")
+        user_id = payload["user_id"]
+        service = @service as CrystalApi::DeviseSessionService
+        user = service.get_user(user_id)
+        return user
+      end
+    rescue JWT::DecodeError
+      return nil
     end
     return nil
   end
