@@ -43,7 +43,7 @@ abstract class CrystalApi::Controllers::DeviseSessionApiController < CrystalApi:
     payload = { "user_id" => resource.db_id }
     token = JWT.encode(payload, @secret, "HS256")
 
-    return {"token": token}
+    return {"token": token}.to_json
   end
 
   def token_to_user(token)
