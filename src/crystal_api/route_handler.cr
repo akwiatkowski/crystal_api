@@ -8,14 +8,16 @@ require "./json_messages"
 # are done in this handler.
 class CrystalApi::RouteHandler < Kemal::RouteHandler
   def call(context)
-    # context.set_json_headers
     process_request(context)
+  end
+
+  def lookup_route(verb, path)
+    @tree.find radix_path(verb, path)
   end
 
   # Processes the route if it's a match. Otherwise renders 404.
   def process_request(context)
-    CrystalApi::Route.check_for_method_override!(context.request)
-    lookup = @tree.find radix_path(context.request.override_method as String, context.request.path)
+    lookup = @tree.find radix_path(context.request.method, context.request.path)
 
     unless lookup.found?
       context.response.print(JsonMessages.route_not_found)

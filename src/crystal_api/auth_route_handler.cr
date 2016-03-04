@@ -15,8 +15,7 @@ class CrystalApi::AuthRouteHandler < CrystalApi::RouteHandler
 
   # Processes the route if it's a match. Otherwise renders 404.
   def process_request(context)
-    CrystalApi::Route.check_for_method_override!(context.request)
-    lookup = @tree.find(radix_path(context.request.override_method as String, context.request.path))
+    lookup = @tree.find(radix_path(context.request.method, context.request.path))
 
     unless lookup.found?
       context.response.print(JsonMessages.route_not_found)
