@@ -26,7 +26,12 @@ class CrystalApi::Adapters::PgAdapter
   end
 
   def pg_string
-    return "postgres://#{@host}/#{@database}?user=#{@user}&password=#{@password}"
+    return "postgresql://#{@user}:#{@password}@#{@host}/#{@database}"
+    #return "postgres://#{@host}/#{@database}?user=#{@user}&password=#{@password}"
+  end
+
+  def pg_string_no_db
+    return "postgresql://#{@user}:#{@password}@#{@host}"
   end
 
   private def db
@@ -132,16 +137,20 @@ class CrystalApi::Adapters::PgAdapter
   end
 
   def create_db
+    return # there is problem with default DB name
     return if @database == nil || @user == nil
 
+    pg_no_db = PG.connect(pg_string_no_db)
+    return
+
     sql = "select count(*) as count from pg_catalog.pg_database where datname = '" + @database.to_s + "';"
-    result = db.exec(sql)
+    result = pg_no_db.exec(sql)
     count = result.rows[0][0] as Int64
 
     if count.to_i > 0
     else
       sql = "CREATE DATABASE " + @database.to_s + " WITH OWNER " + @user.to_s + ";"
-      result = db.exec(sql)
+      result = pg_no_db.exec(sql)
       puts "DB #{@database} created"
     end
 
