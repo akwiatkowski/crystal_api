@@ -1,4 +1,4 @@
-require "crystal-pg/pg"
+require "pg/pg"
 require "yaml"
 
 class CrystalApi::Adapters::PgAdapter
