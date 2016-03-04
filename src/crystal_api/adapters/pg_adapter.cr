@@ -13,6 +13,8 @@ class CrystalApi::Adapters::PgAdapter
     load_yaml(config_path) if config_path
 
     @pg = PG.connect(pg_string)
+
+    create_db
   end
 
   def load_yaml(config_path)
@@ -127,5 +129,21 @@ class CrystalApi::Adapters::PgAdapter
     )"
 
     return db.exec(sql)
+  end
+
+  def create_db
+    return if @database == nil || @user == nil
+
+    sql = "select count(*) as count from pg_catalog.pg_database where datname = '" + @database.to_s + "';"
+    result = db.exec(sql)
+    count = result.rows[0][0] as Int64
+
+    if count.to_i > 0
+    else
+      sql = "CREATE DATABASE " + @database.to_s + " WITH OWNER " + @user.to_s + ";"
+      result = db.exec(sql)
+      puts "DB #{@database} created"
+    end
+
   end
 end
