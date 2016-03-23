@@ -3,8 +3,31 @@ require "kemal/kemal/context"
 class HTTP::Server::Context
   @time_mark : (Float64 | Nil)
   @db_time_cost : (Float64 | Nil)
+  @params_hash : (Hash(String, AllParamTypes) | Nil)
+  @params_processed : (Bool | Nil)
 
   property :get_user_from_token_f
+
+  def params
+    if @params_processed.nil?
+      pp = Kemal::ParamParser.new(@request)
+      @params_hash = pp.json
+
+      merge_param(pp.url) if pp.url.any?
+      merge_param(pp.query) if pp.query.any?
+      merge_param(pp.body) if pp.body.any?
+    end
+
+    return @params_hash as Hash(String, AllParamTypes)
+  end
+
+  # a bit dirty hax
+  def merge_param(p)
+    h = @params_hash as Hash(String, AllParamTypes)
+    p.keys.each do |k|
+      h[k] = p[k]
+    end
+  end
 
   def mark_time_pre_db
     @time_mark = Time.now.epoch_f

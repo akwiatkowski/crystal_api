@@ -6,11 +6,11 @@ shards:
 
   kemal:
     github: sdogruyol/kemal
-    version: 0.9.3
+    version: 0.11.1
 
   kilt:
     github: jeromegn/kilt
-    version: 0.3.2
+    version: 0.3.3
 
   pg:
     github: will/crystal-pg
