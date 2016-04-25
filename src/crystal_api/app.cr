@@ -22,13 +22,15 @@ require "./controllers/devise_session_controller"
 
 class CrystalApi::App
   property :port, :home_controller_enabled
-  getter :adapter
+  getter :adapter, :is_ready
 
   def initialize(db_adapter)
     @port = 8002
     @home_controller_enabled = true
 
     @adapter = db_adapter
+
+    @is_ready = false
 
     @logger = HTTP::LogHandler.new(STDOUT)
     @route_handler = CrystalApi::AuthRouteHandler.new
@@ -50,6 +52,9 @@ class CrystalApi::App
 
     server = HTTP::Server.new(@port, [@logger, @route_handler])
     puts "Running"
+
+    @is_ready = true
+
     server.listen
   end
 
