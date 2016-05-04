@@ -62,7 +62,10 @@ end
 
 describe CrystalApi do
   it "run server and test full CRUD" do
-    a = CrystalApi::App.new(DbAdapter.new(config_path: "config/database.yml"))
+    config_path = "config/database.yml"
+    config_path = "config/travis.yml" unless File.exists?(config_path)
+
+    a = CrystalApi::App.new(DbAdapter.new(config_path: config_path))
     port = 8002
 
     future do

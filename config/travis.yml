@@ -1,0 +1,5 @@
+host: localhost
+database: travis_ci_test
+# not used
+user: travis_ci
+password: travis_ci
