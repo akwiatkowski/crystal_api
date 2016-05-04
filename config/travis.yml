@@ -1,5 +1,5 @@
 host: localhost
 database: travis_ci_test
 # not used
-user:
-password: 
+user: postgres
+password:
