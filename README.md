@@ -1,11 +1,12 @@
 # crystal_api
 
-[![Build Status](https://travis-ci.org/akwiatkowski/crystal_api.svg?branch=master)](https://travis-ci.org/akwiatkowski/crystal_api)
 
 Toolset for creating REST Api in Crystal Language.
 
 [![Dependency Status](https://shards.rocks/badge/github/akwiatkowski/crystal_api/status.svg)](https://shards.rocks/github/akwiatkowski/crystal_api)
 [![devDependency Status](https://shards.rocks/badge/github/akwiatkowski/crystal_api/dev_status.svg)](https://shards.rocks/github/akwiatkowski/crystal_api)
+[![Build Status](https://travis-ci.org/akwiatkowski/crystal_api.svg?branch=master)](https://travis-ci.org/akwiatkowski/crystal_api)
+
 
 ## Roadmap
 
