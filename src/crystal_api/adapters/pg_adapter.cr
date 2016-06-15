@@ -12,17 +12,17 @@ class CrystalApi::Adapters::PgAdapter
 
     load_yaml(config_path) if config_path
 
-    @pg = PG.connect(pg_string)
+    @pg = PG.connect(pg_string) as PG::Connection
 
     create_db
   end
 
   def load_yaml(config_path)
     config = YAML.parse(File.read(config_path))
-    @host = config["host"]
-    @database = config["database"]
-    @user = config["user"]
-    @password = config["password"]
+    @host = config["host"].to_s
+    @database = config["database"].to_s
+    @user = config["user"].to_s
+    @password = config["password"].to_s
   end
 
   def pg_string

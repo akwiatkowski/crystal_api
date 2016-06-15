@@ -26,7 +26,7 @@ class EventModel < CrystalApi::CrystalModel
 end
 
 class EventsService < CrystalApi::RestService
-  def initialize(a)
+  def initialize(a : CrystalApi::Adapters::PgAdapter)
     @adapter = a
     @table_name = EventModel::DB_TABLE
 
@@ -40,7 +40,7 @@ class EventsService < CrystalApi::RestService
 end
 
 class EventsController < CrystalApi::Controllers::JsonRestApiController
-  def initialize(s)
+  def initialize(s : CrystalApi::RestService)
     @service = s
 
     @actions = [

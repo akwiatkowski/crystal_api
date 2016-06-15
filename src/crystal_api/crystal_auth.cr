@@ -13,12 +13,13 @@ class CrystalApi::CrystalAuth
   property :proc
 
   def initialize
-    @proc = -> (context : HTTP::Server::Context, auth : CrystalApi::CrystalAuth ) { true }
-    @tree = Radix::Tree.new
+    #@proc = -> (context : HTTP::Server::Context, auth : CrystalApi::CrystalAuth ) { true }
+    @tree = Radix::Tree(String).new
   end
 
   def auth_context(context : HTTP::Server::Context)
-    return @proc.call(context, self)
+    return true
+    #return @proc.call(context, self)
   end
 
   def can!(method, path, user_role : String)

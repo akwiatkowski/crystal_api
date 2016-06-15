@@ -28,7 +28,7 @@ class CrystalApi::App
     @port = 8002
     @home_controller_enabled = true
 
-    @adapter = db_adapter
+    @adapter = db_adapter as (CrystalApi::Adapters::PgAdapter)
 
     @is_ready = false
 

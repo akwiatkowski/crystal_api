@@ -5,7 +5,7 @@ class CrystalApi::AuthRouteHandler < CrystalApi::RouteHandler
   getter :auth
 
   def initialize
-    @tree = Radix::Tree.new
+    @tree = Radix::Tree(CrystalApi::Route).new
     @auth = CrystalApi::CrystalAuth.new
   end
 

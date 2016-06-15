@@ -4,13 +4,25 @@ require "./json_messages"
 
 # this content is used from from https://github.com/sdogruyol/kemal
 
-# Kemal::RouteHandler is the main handler which handles all the HTTP requests. Routing, parsing, rendering e.g
-# are done in this handler.
-class CrystalApi::RouteHandler < Kemal::RouteHandler
+class CrystalApi::RouteHandler
+  def initialize
+    @tree = Radix::Tree(CrystalApi::Route).new
+  end
+
+  property tree
+
   def call(context)
     process_request(context)
   end
 
+  # Adds a given route to routing tree. As an exception each `GET` route additionaly defines
+  # a corresponding `HEAD` route.
+  def add_route(method, path, &handler : HTTP::Server::Context -> _)
+    add_to_radix_tree method, path, CrystalApi::Route.new(method, path, &handler)
+    add_to_radix_tree("HEAD", path, CrystalApi::Route.new("HEAD", path, &handler)) if method == "GET"
+  end
+
+  # Check if a route is defined and returns the lookup
   def lookup_route(verb, path)
     @tree.find radix_path(verb, path)
   end
@@ -31,10 +43,13 @@ class CrystalApi::RouteHandler < Kemal::RouteHandler
     context
   end
 
-  # Adds a given route to routing tree. As an exception each `GET` route additionaly defines
-  # a corresponding `HEAD` route.
-  def add_route(method, path, &handler : HTTP::Server::Context -> _)
-    add_to_radix_tree method, path, CrystalApi::Route.new(method, path, &handler)
-    add_to_radix_tree("HEAD", path, CrystalApi::Route.new("HEAD", path, &handler)) if method == "GET"
+  private def radix_path(method : String, path)
+    "/#{method.downcase}#{path}"
   end
+
+  private def add_to_radix_tree(method, path, route)
+    node = radix_path method, path
+    @tree.add node, route
+  end
+
 end
