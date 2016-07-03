@@ -8,13 +8,21 @@ shards:
     github: sdogruyol/kemal
     version: 0.13.0
 
+  kemal-pg:
+    github: sdogruyol/kemal-pg
+    commit: f529d34156f111962d5d95abc3635df2b12975ad
+
   kilt:
     github: jeromegn/kilt
     version: 0.3.3
 
   pg:
     github: will/crystal-pg
-    version: 0.8.0
+    commit: cafe3e90b4a239aa9819482543c63503a6a3f477
+
+  pool:
+    github: ysbaddaden/pool
+    commit: c4ecfad1b87fbd8c6484d1fd536ccfd14c40cc94
 
   radix:
     github: luislavena/radix

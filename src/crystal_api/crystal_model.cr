@@ -10,11 +10,6 @@ macro crystal_model(name, *properties)
     {% end %}
     )
 
-    {% for property in properties %}
-    puts "{{property.var}}: {{property.type}}"
-    {% end %}
-
-
     def initialize({{
                      *properties.map do |field|
                        "@#{field.id}".id
@@ -27,6 +22,20 @@ macro crystal_model(name, *properties)
         if h["{{property.var}}"]?
           if h["{{property.var}}"].as?( ({{property.type}}) )
             self.{{property.var}} = h["{{property.var}}"].as( ({{property.type}}) )
+          end
+        end
+      {% end %}
+    end
+
+    def initialize(keys : Array, values : Array)
+      {% for property in properties %}
+        keys.each_index do |i|
+          if keys[i] == "{{property.var}}"
+
+            if values[i].as?( ({{property.type}}) )
+              self.{{property.var}} = values[i].as( ({{property.type}}) )
+            end
+
           end
         end
       {% end %}

@@ -1,19 +1,10 @@
 require "../src/crystal_api"
 
+pg_connect_from_yaml(File.join(["config", "database.yml"]))
+
 # define model
-crystal_model(User, id : (Int32 | Nil) = nil, name : (String | Nil) = nil, email : (String | Nil) = nil)
-
-#
-# u = User.new({"name" => "Name"})
-# puts u.inspect
-#
-# u = User.new({"id" => 2, "name" => "Name"})
-# puts u.inspect
-
-# https://github.com/crystal-lang/crystal/blob/204bfd0555921f3aadbda289993cca5323ebaf95/src/macros.cr#L50
-
-
-crystal_resource user, users, User
+crystal_model(EventModel, id : (Int32 | Nil) = nil, name : (String | Nil) = nil)
+crystal_resource event, events, events, EventModel
 
 # record CrystalApi::CrystalRestController, resource : String, path : String, model_klass : Class
 

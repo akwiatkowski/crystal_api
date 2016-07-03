@@ -5,10 +5,13 @@ authors:
   - Aleksander Kwiatkowski <bobikx@poczta.fm>
 
 dependencies:
-  pg:
-    github: "will/crystal-pg"
   kemal:
     github: sdogruyol/kemal
+
+  kemal-pg:
+    github: sdogruyol/kemal-pg
+    branch: master
+
   jwt:
     github: greyblake/crystal-jwt
 
