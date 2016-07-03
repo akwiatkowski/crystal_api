@@ -22,8 +22,8 @@ abstract class CrystalApi::Controllers::DeviseSessionApiController < CrystalApi:
   # curl -H "Content-Type: application/json" -X POST -d '{"user":{"email": "email@email.org", "password": "password"}}' http://localhost:8002/session
   def create(context)
     context.set_json_headers
-    service = @service as CrystalApi::DeviseSessionService
-    object_params = context.params[@resource_name] as Hash(String, JSON::Type)
+    service = @service.as(CrystalApi::DeviseSessionService)
+    object_params = context.params[@resource_name].as(Hash(String, JSON::Type))
 
     context.mark_time_pre_db
     resource = service.create(object_params)
@@ -40,7 +40,7 @@ abstract class CrystalApi::Controllers::DeviseSessionApiController < CrystalApi:
   end
 
   def token_response(resource)
-    payload = { "user_id" => resource.db_id }
+    payload = {"user_id" => resource.db_id}
     token = JWT.encode(payload, @secret, "HS256")
 
     return {"token": token}.to_json
@@ -51,7 +51,7 @@ abstract class CrystalApi::Controllers::DeviseSessionApiController < CrystalApi:
       payload, header = JWT.decode(token, @secret, "HS256")
       if payload.is_a?(Hash) && payload.has_key?("user_id")
         user_id = payload["user_id"]
-        service = @service as CrystalApi::DeviseSessionService
+        service = @service.as(CrystalApi::DeviseSessionService)
         user = service.get_user(user_id)
         return user
       end
@@ -60,5 +60,4 @@ abstract class CrystalApi::Controllers::DeviseSessionApiController < CrystalApi:
     end
     return nil
   end
-
 end

@@ -1,3 +1,3 @@
 module CrystalApi
-  VERSION = "0.5.1"
+  VERSION = "0.9.0"
 end

@@ -1,5 +1,6 @@
 # crystal_api
 
+## Warning! There is massive update in progress which will break everything!
 
 Toolset for creating REST Api in Crystal Language.
 

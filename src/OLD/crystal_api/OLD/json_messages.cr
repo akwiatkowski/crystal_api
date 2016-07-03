@@ -1,8 +1,8 @@
 class CrystalApi::JsonMessages
   ERROR_ROUTE_NOT_FOUND = "route_not_found"
-  ERROR_NOT_FOUND = "not_found"
-  ERROR_BAD_REQUEST = "bad_request"
-  ERROR_FORBIDDEN = "forbidden"
+  ERROR_NOT_FOUND       = "not_found"
+  ERROR_BAD_REQUEST     = "bad_request"
+  ERROR_FORBIDDEN       = "forbidden"
 
   def self.error_message(content)
     "{\"error\": \"#{content}\"}"
@@ -23,5 +23,4 @@ class CrystalApi::JsonMessages
   def self.forbidden
     error_message(ERROR_FORBIDDEN)
   end
-
 end

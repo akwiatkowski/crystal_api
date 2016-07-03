@@ -5,8 +5,8 @@ end
 
 class EventModel < CrystalApi::CrystalModel
   def initialize(_db_id, _name)
-    @db_id = _db_id as Int32
-    @name = _name as (String | Nil)
+    @db_id = _db_id.as(Int32)
+    @name = _name.as((String | Nil))
   end
 
   getter :db_id, :name
@@ -46,7 +46,7 @@ class EventsController < CrystalApi::Controllers::JsonRestApiController
       "show",
       "create",
       "update",
-      "delete"
+      "delete",
     ]
 
     @path = "/events"
@@ -56,5 +56,5 @@ end
 
 a = CrystalApi::App.new(DbAdapter.new(config_path: "config/database.yml"))
 a.port = 8002
-a.add_controller( EventsController.new(EventsService.new(a.adapter)) )
+a.add_controller(EventsController.new(EventsService.new(a.adapter)))
 a.start

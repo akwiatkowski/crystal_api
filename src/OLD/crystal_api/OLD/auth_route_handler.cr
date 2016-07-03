@@ -23,7 +23,7 @@ class CrystalApi::AuthRouteHandler < CrystalApi::RouteHandler
       return context
     end
 
-    route = lookup.payload as CrystalApi::Route
+    route = lookup.payload.as(CrystalApi::Route)
     context.request.url_params = lookup.params
     if @auth.auth_context(context)
       context.response.print(route.handler.call(context).to_s)
@@ -33,6 +33,5 @@ class CrystalApi::AuthRouteHandler < CrystalApi::RouteHandler
       context.set_error_forbidden
       return context
     end
-
   end
 end

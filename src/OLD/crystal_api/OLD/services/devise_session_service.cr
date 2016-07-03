@@ -24,7 +24,6 @@ abstract class CrystalApi::DeviseSessionService
       else
         return nil
       end
-
     end
   end
 
@@ -42,5 +41,4 @@ abstract class CrystalApi::DeviseSessionService
     # return CrystalApi::CrystalModel.new(r["id"])
     return nil
   end
-
 end

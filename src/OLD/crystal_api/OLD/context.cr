@@ -18,12 +18,12 @@ class HTTP::Server::Context
       merge_param(pp.body) if pp.body.any?
     end
 
-    return @params_hash as Hash(String, AllParamTypes)
+    return @params_hash.as(Hash(String, AllParamTypes))
   end
 
   # a bit dirty hax
   def merge_param(p)
-    h = @params_hash as Hash(String, AllParamTypes)
+    h = @params_hash.as(Hash(String, AllParamTypes))
     p.keys.each do |k|
       h[k] = p[k]
     end
@@ -35,7 +35,7 @@ class HTTP::Server::Context
 
   def mark_time_post_db
     if @time_mark.is_a?(Float64)
-      @db_time_cost = Time.now.epoch_f - (@time_mark as Float64)
+      @db_time_cost = Time.now.epoch_f - (@time_mark.as(Float64))
     end
   end
 
@@ -45,7 +45,7 @@ class HTTP::Server::Context
 
   def set_time_cost_headers
     if @db_time_cost.is_a?(Float64)
-      response.headers["X-time-db"] = (@db_time_cost as Float64).to_s
+      response.headers["X-time-db"] = (@db_time_cost.as(Float64)).to_s
     end
   end
 
@@ -69,5 +69,4 @@ class HTTP::Server::Context
   def set_error_forbidden
     response.status_code = 403
   end
-
 end

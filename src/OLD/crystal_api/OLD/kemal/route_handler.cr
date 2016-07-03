@@ -1,6 +1,7 @@
 require "kemal/kemal/route_handler"
 require "./route"
-require "./json_messages"
+
+# require "./json_messages"
 
 # this content is used from from https://github.com/sdogruyol/kemal
 
@@ -37,7 +38,7 @@ class CrystalApi::RouteHandler
       return context
     end
 
-    route = lookup.payload as CrystalApi::Route
+    route = lookup.payload.as(CrystalApi::Route)
     context.request.url_params = lookup.params
     context.response.print(route.handler.call(context).to_s)
     context
@@ -51,5 +52,4 @@ class CrystalApi::RouteHandler
     node = radix_path method, path
     @tree.add node, route
   end
-
 end

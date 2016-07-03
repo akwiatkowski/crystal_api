@@ -28,7 +28,7 @@ class CrystalApi::App
     @port = 8002
     @home_controller_enabled = true
 
-    @adapter = db_adapter as (CrystalApi::Adapters::PgAdapter)
+    @adapter = db_adapter.as((CrystalApi::Adapters::PgAdapter))
 
     @is_ready = false
 
@@ -71,5 +71,4 @@ class CrystalApi::App
       controller.prepare_routes(@route_handler)
     end
   end
-
 end

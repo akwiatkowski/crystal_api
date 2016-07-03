@@ -1,10 +1,12 @@
 require "pg/pg"
 require "yaml"
 
-class CrystalApi::Adapters::PgAdapter
+require "./abstract_db_adapter"
+
+class CrystalApi::Adapters::PgAdapter < CrystalApi::Adapters::AbstractDbAdapter
   alias PgType = Nil | String | Int16 | Int32 | Int64 | Float32 | Float64 | Bool | Time | Slice(UInt8) | Hash(String, JSON::Any) | Array(JSON::Any) | JSON::Any
 
-  def initialize(config_path = nil as (Nil | String), host = "localhost", database = "db", user = "postgres", password = "postgres")
+  def initialize(config_path = nil.as((Nil | String)), host = "localhost", database = "db", user = "postgres", password = "postgres")
     @host = host
     @database = database
     @user = user
@@ -12,7 +14,7 @@ class CrystalApi::Adapters::PgAdapter
 
     load_yaml(config_path) if config_path
 
-    @pg = PG.connect(pg_string) as PG::Connection
+    @pg = PG.connect(pg_string).as(PG::Connection)
 
     create_db
   end
@@ -27,7 +29,7 @@ class CrystalApi::Adapters::PgAdapter
 
   def pg_string
     return "postgresql://#{@user}:#{@password}@#{@host}/#{@database}"
-    #return "postgres://#{@host}/#{@database}?user=#{@user}&password=#{@password}"
+    # return "postgres://#{@host}/#{@database}?user=#{@user}&password=#{@password}"
   end
 
   def pg_string_no_db
@@ -145,7 +147,7 @@ class CrystalApi::Adapters::PgAdapter
 
     sql = "select count(*) as count from pg_catalog.pg_database where datname = '" + @database.to_s + "';"
     result = pg_no_db.exec(sql)
-    count = result.rows[0][0] as Int64
+    count = result.rows[0][0].as(Int64)
 
     if count.to_i > 0
     else
@@ -153,6 +155,5 @@ class CrystalApi::Adapters::PgAdapter
       result = pg_no_db.exec(sql)
       puts "DB #{@database} created"
     end
-
   end
 end
