@@ -49,9 +49,6 @@ macro crystal_model(name, *properties)
       {% end %}
     end
 
-    # def initialize(h : Hash(String, JSON::Type))
-    # end
-
     {{yield}}
 
     def clone
@@ -66,6 +63,32 @@ macro crystal_model(name, *properties)
                           end
                         end
                       }})
+    end
+
+    # TODO check if there is mapping already done by someone else
+    def self.create_table_sql(collection)
+      columns_chunks = Array(String).new
+
+      {% for property in properties %}
+        column_type = "string"
+        {% if property.type == Int32 %}
+          column_type = "integer"
+        {% elsif property.type == Float64 %}
+          column_type = "float"
+        {% end %}
+
+        column_name = "{{property.var}}"
+        columns_chunks << "#{column_name} #{column_type}"
+      {% end %}
+
+      sql = "create table if not exists #{collection} (
+        id serial,
+        " +
+        columns_chunks.join(", ") + ",
+        primary key(id)
+      )"
+
+      return sql
     end
 
   end

@@ -11,6 +11,14 @@ macro crystal_resource(resource_name, resource_path, resource_table, model_name)
     return resources
   end
 
+  # magic migration
+  def crystal_migrate_{{resource_name}}
+    sql = {{model_name}}.create_table_sql("{{resource_table}}")
+    handler = Kemal::Config::HANDLERS.select{|h| h.as?(Kemal::CrystalApi)}.first as Kemal::CrystalApi
+    service = handler.crystal_service
+    result = service.execute_sql(sql)
+  end
+
   get "/{{resource_path}}" do |env|
     db_result = env.crystal_service.get_all_objects("{{resource_table}}")
     resources = crystal_resource_convert_{{resource_name}}(db_result)

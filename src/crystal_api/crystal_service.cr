@@ -27,6 +27,8 @@ class Kemal::CrystalApi < HTTP::Handler
     @crystal_service = CrystalService.new(@pg)
   end
 
+  getter :crystal_service
+
   def call(context)
     context.crystal_service = @crystal_service
     call_next(context)
@@ -45,6 +47,13 @@ end
 
 class CrystalService
   def initialize(@pg : ConnectionPool(PG::Connection))
+  end
+
+  def execute_sql(sql)
+    db = @pg.connection
+    result = db.exec(sql)
+    @pg.release
+    return result
   end
 
   def get_all_objects(collection)
