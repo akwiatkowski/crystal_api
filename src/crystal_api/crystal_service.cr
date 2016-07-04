@@ -47,33 +47,71 @@ class CrystalService
   def initialize(@pg : ConnectionPool(PG::Connection))
   end
 
-  # def convert_response_to_array(response)
-  #   array = [] of Hash(String, PgType)
-  #   response.rows.each do |row|
-  #     h = Hash(String, PgType).new
-  #     response.fields.each_with_index do |field, i|
-  #       h[field.name] = row[i]
-  #     end
-  #     array << h
-  #   end
-  #
-  #   return array
-  # end
-
-  # def get_all_objects(collection)
-  #   sql = "select * from #{collection};"
-  #   db = @pg.connection
-  #   result = db.exec(sql)
-  #   @pg.release
-  #
-  #   puts sql
-  #   puts result.rows.inspect
-  #
-  #   return convert_response_to_array(result)
-  # end
-
   def get_all_objects(collection)
     sql = "select * from #{collection};"
+    db = @pg.connection
+    result = db.exec(sql)
+    @pg.release
+    return result
+  end
+
+  def get_object(collection, id)
+    sql = "select * from #{collection} where id = #{id};"
+    db = @pg.connection
+    result = db.exec(sql)
+    @pg.release
+    return result
+  end
+
+  def escape_value(value)
+    if value.is_a?(Int32)
+      return value.to_s
+    elsif value.is_a?(String)
+      return "'" + value.to_s + "'"
+    else
+      return "'" + value.to_s + "'"
+    end
+  end
+
+  def insert_object(collection, hash)
+    columns = [] of String
+    values = [] of String
+
+    hash.keys.each do |column|
+      columns << column
+      value = hash[column]
+      values << escape_value(value)
+    end
+
+    sql = "insert into #{collection} (#{columns.join(", ")}) values (#{values.join(", ")}) returning *;"
+
+    db = @pg.connection
+    result = db.exec(sql)
+    @pg.release
+    return result
+  end
+
+  def update_object(collection, db_id, hash)
+    columns = [] of String
+    values = [] of String
+
+    hash.keys.each do |column|
+      columns << column
+      value = hash[column]
+      values << escape_value(value)
+    end
+
+    sql = "update only #{collection} set (#{columns.join(", ")}) = (#{values.join(", ")}) where id = #{db_id} returning *;"
+
+    db = @pg.connection
+    result = db.exec(sql)
+    @pg.release
+    return result
+  end
+
+  def delete_object(collection, db_id)
+    sql = "delete from only #{collection} where id = #{db_id} returning *;"
+
     db = @pg.connection
     result = db.exec(sql)
     @pg.release

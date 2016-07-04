@@ -20,7 +20,7 @@ puts "- #{command.colorize(:red)}"
 response = `#{command}`
 json = JSON.parse(response)
 puts "= #{json.inspect.colorize(:green)}"
-id = json["db_id"]
+id = json["id"]
 
 # index
 puts "INDEX".colorize(:light_blue)

@@ -1,3 +1,5 @@
+require "json"
+
 macro crystal_model(name, *properties)
   struct {{name.id}}
     {% for property in properties %}
@@ -9,6 +11,12 @@ macro crystal_model(name, *properties)
       {{property.var}}: {{property.type}},
     {% end %}
     )
+
+    COLUMNS = [
+      {% for property in properties %}
+        {{property.var}},
+      {% end %}
+    ]
 
     def initialize({{
                      *properties.map do |field|
@@ -40,6 +48,9 @@ macro crystal_model(name, *properties)
         end
       {% end %}
     end
+
+    # def initialize(h : Hash(String, JSON::Type))
+    # end
 
     {{yield}}
 
