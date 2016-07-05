@@ -78,7 +78,9 @@ macro crystal_model(name, *properties)
         {% end %}
 
         column_name = "{{property.var}}"
-        columns_chunks << "#{column_name} #{column_type}"
+        unless column_name == "id"
+          columns_chunks << "#{column_name} #{column_type}"
+        end
       {% end %}
 
       sql = "create table if not exists #{collection} (
