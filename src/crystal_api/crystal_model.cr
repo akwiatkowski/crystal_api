@@ -70,7 +70,7 @@ macro crystal_model(name, *properties)
       columns_chunks = Array(String).new
 
       {% for property in properties %}
-        column_type = "string"
+        column_type = "text"
         {% if property.type == Int32 %}
           column_type = "integer"
         {% elsif property.type == Float64 %}
