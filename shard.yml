@@ -12,6 +12,9 @@ dependencies:
     github: sdogruyol/kemal-pg
     branch: master
 
+  kemal-auth-token:
+    github: akwiatkowski/kemal-auth-token
+
   jwt:
     github: greyblake/crystal-jwt
 

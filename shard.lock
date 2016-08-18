@@ -8,6 +8,10 @@ shards:
     github: sdogruyol/kemal
     version: 0.14.1
 
+  kemal-auth-token:
+    github: akwiatkowski/kemal-auth-token
+    commit: 23abfa4f15b31871d5b6479d16965c61f0874ce6
+
   kemal-pg:
     github: sdogruyol/kemal-pg
     commit: 2b13249a5fd92f8806ec1dc1d037b9622709d4c2

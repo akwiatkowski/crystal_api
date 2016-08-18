@@ -9,5 +9,6 @@ crystal_resource event, events, events, EventModel
 # migrations are not ready
 #crystal_migrate_event
 
+Kemal.config.logging = false
 Kemal.config.port = 8002
 Kemal.run
