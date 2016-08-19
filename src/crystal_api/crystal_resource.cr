@@ -1,4 +1,4 @@
-macro crystal_resource(resource_name, resource_path, resource_table, model_name)
+macro crystal_resource_convert(resource_name, resource_path, resource_table, model_name)
   def crystal_resource_convert_{{resource_name}}(db_result)
     fields = db_result.fields.map{|f| f.name} # Array(String)
 
@@ -10,7 +10,9 @@ macro crystal_resource(resource_name, resource_path, resource_table, model_name)
 
     return resources
   end
+end
 
+macro crystal_resource_migrate(resource_name, resource_path, resource_table, model_name)
   # magic migration
   def crystal_migrate_{{resource_name}}
     sql = {{model_name}}.create_table_sql("{{resource_table}}")
@@ -18,6 +20,13 @@ macro crystal_resource(resource_name, resource_path, resource_table, model_name)
     service = handler.crystal_service
     result = service.execute_sql(sql)
   end
+end
+
+
+
+macro crystal_resource(resource_name, resource_path, resource_table, model_name)
+  crystal_resource_convert({{resource_name}}, {{resource_path}}, {{resource_table}}, {{model_name}})
+  crystal_resource_migrate({{resource_name}}, {{resource_path}}, {{resource_table}}, {{model_name}})
 
   get "/{{resource_path}}" do |env|
     db_result = env.crystal_service.get_all_objects("{{resource_table}}")

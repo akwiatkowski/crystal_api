@@ -2,6 +2,9 @@
 
 ## Warning! There is massive update in progress which will break everything!
 
+Key notes:
+* models must allow all fields to be Nil, all validations as method override
+
 Toolset for creating REST Api in Crystal Language.
 
 [![Dependency Status](https://shards.rocks/badge/github/akwiatkowski/crystal_api/status.svg)](https://shards.rocks/github/akwiatkowski/crystal_api)

@@ -16,7 +16,7 @@ crystal_model(EventModel, id : (Int32 | Nil) = nil, name : (String | Nil) = nil)
 crystal_resource event, events, events, EventModel
 Kemal.config.port = 8002
 
-# run Kemal no to block spec
+# run Kemal not to block spec code
 spawn do
   Kemal.run
 end
