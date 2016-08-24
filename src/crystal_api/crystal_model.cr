@@ -65,13 +65,6 @@ macro crystal_model(name, *properties)
                       }})
     end
 
-    # Faster way to get CrystalService
-    def self.service : CrystalService
-      handler = Kemal::Config::HANDLERS.select{|h| h.as?(Kemal::CrystalApi)}.first as Kemal::CrystalApi
-      service = handler.crystal_service
-      return service
-    end
-
     # TODO check if there is mapping already done by someone else
     def self.create_table_sql(collection)
       columns_chunks = Array(String).new

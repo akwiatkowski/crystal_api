@@ -127,5 +127,11 @@ class CrystalService
     return result
   end
 
+  # Faster way to get CrystalService
+  def self.instance
+    handler = Kemal::Config::HANDLERS.select{|h| h.as?(Kemal::CrystalApi)}.first as Kemal::CrystalApi
+    service = handler.crystal_service
+    return service
+  end
 
 end
