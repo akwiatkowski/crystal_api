@@ -71,10 +71,12 @@ macro crystal_model(name, *properties)
 
       {% for property in properties %}
         column_type = "text"
-        {% if property.type == Int32 %}
+        {% if property.type == (Int32 | Nil) %}
           column_type = "integer"
-        {% elsif property.type == Float64 %}
+        {% elsif property.type == (Float64 | Nil) %}
           column_type = "float"
+        {% elsif property.type == (Time | Nil) %}
+          column_type = "time"
         {% end %}
 
         column_name = "{{property.var}}"
