@@ -70,12 +70,14 @@ macro crystal_model(name, *properties)
       columns_chunks = Array(String).new
 
       {% for property in properties %}
+        {{ t = "#{property.type}".gsub(/\|.*$/, "").strip }}
+
         column_type = "text"
-        {% if property.type == (Int32 | Nil) %}
+        {% if t == "Int32" %}
           column_type = "integer"
-        {% elsif property.type == (Float64 | Nil) %}
+        {% elsif t == "Float64" %}
           column_type = "float"
-        {% elsif property.type == (Time | Nil) %}
+        {% elsif t == "Time" %}
           column_type = "time"
         {% end %}
 
