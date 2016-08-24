@@ -93,4 +93,30 @@ describe CrystalApi do
     Kemal.config.server.not_nil!.close
 
   end
+
+  it "get object by name" do
+    service = CrystalService.instance
+
+    # create
+    name = "Name to where #{Time.now.epoch}"
+    h = {"name" => name}
+    result = service.insert_object("events", h)
+    collection = crystal_resource_convert_event(result)
+
+    # find
+    result = service.get_filtered_objects("events", h)
+    collection = crystal_resource_convert_event(result)
+
+    collection.size.should eq 1
+    collection[0].name.should eq name
+
+    # delete
+    service.delete_object("events", collection[0].id)
+
+    # find after delete
+    result = service.get_filtered_objects("events", h)
+    collection = crystal_resource_convert_event(result)
+
+    collection.size.should eq 0
+  end
 end

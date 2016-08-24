@@ -64,8 +64,37 @@ class CrystalService
     return result
   end
 
-  def get_object(collection, id)
+  def get_object(collection, id : (Int32 | String))
     sql = "select * from #{collection} where id = #{id};"
+    db = @pg.connection
+    result = db.exec(sql)
+    @pg.release
+    return result
+  end
+
+  def get_filtered_objects(collection, hash : Hash)
+    columns = [] of String
+    values = [] of String
+
+    hash.keys.each do |column|
+      columns << column
+      value = hash[column]
+      values << escape_value(value)
+    end
+
+    sql = "select * from #{collection}"
+    if columns.size > 0
+      sql += " where "
+
+      conditions = [] of String
+      columns.each_with_index do |column, i|
+        conditions << "#{column} = #{values[i]}"
+      end
+
+      sql += "#{conditions.join(" and ")}"
+    end
+    sql += ";"
+
     db = @pg.connection
     result = db.exec(sql)
     @pg.release
