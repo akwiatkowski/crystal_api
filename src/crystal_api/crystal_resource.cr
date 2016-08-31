@@ -1,3 +1,9 @@
+macro crystal_resource(resource_name, resource_table, model_name)
+  crystal_resource_convert({{resource_name}}, {{model_name}})
+  crystal_resource_migrate({{resource_name}}, {{resource_table}}, {{model_name}})
+  crystal_resource_model_methods({{resource_name}}, {{resource_table}}, {{model_name}})
+end
+
 macro crystal_resource_convert(resource_name, model_name)
   def crystal_resource_convert_{{resource_name}}(db_result)
     fields = db_result.fields.map{|f| f.name} # Array(String)
@@ -26,19 +32,34 @@ macro crystal_resource_migrate(resource_name, resource_table, model_name)
       crystal_migrate_now_{{resource_name}}
     }
   end
+
+
+    # It is migration style, but require class methods
+    # TODO integrate class methods and move to migration
+    def crystal_clear_table_now_{{resource_name}}
+      {{model_name}}.delete_all
+    end
+
+    def crystal_clear_table_{{resource_name}}
+      CrystalInit::INITIALIZERS << ->{
+        crystal_clear_table_now_{{resource_name}}
+      }
+    end
 end
 
 macro crystal_resource_model_methods(resource_name, resource_table, model_name)
-  def {{model_name}}.service
+  struct {{model_name}}
+
+  def self.service
     CrystalService.instance
   end
 
-  def {{model_name}}.delete_all
+  def self.delete_all
     service.execute_sql("delete from \"{{resource_table}}\";")
   end
 
-  def {{model_name}}.fetch(
-      where = {} of String => PgType,
+  def self.fetch(
+      where : Hash = {} of String => PgType,
       limit : Int32 = 25,
       order : String = ""
     )
@@ -68,20 +89,14 @@ macro crystal_resource_model_methods(resource_name, resource_table, model_name)
     return resources
   end
 
-  # It is migration style, but require class methods
-  # TODO integrate class methods and move to migration
-  def crystal_clear_table_now_{{resource_name}}
-    {{model_name}}.delete_all
-  end
-
-  def crystal_clear_table_{{resource_name}}
-    CrystalInit::INITIALIZERS << ->{
-      crystal_clear_table_now_{{resource_name}}
-    }
+  def delete
+    self.class.service.delete_object("{{resource_table}}", self.id)
   end
 end
 
-macro crystal_resource(resource_name, resource_path, resource_table, model_name)
+end
+
+macro crystal_resource_full_rest(resource_name, resource_path, resource_table, model_name)
   crystal_resource_convert({{resource_name}}, {{model_name}})
   crystal_resource_migrate({{resource_name}}, {{resource_table}}, {{model_name}})
   crystal_resource_model_methods({{resource_name}}, {{resource_table}}, {{model_name}})

@@ -1,38 +1,22 @@
 # crystal_api
 
-## Warning! There is massive update in progress which will break everything!
-
-`crystal_api` is a set of helpful tools to create JSON APIs.
-
-It sacrifise elastic approach like in [active_record.cr][https://github.com/waterlink/active_record.cr]
-to maximize performance for need to be more explicit.
-
-Key notes:
-* all models are `struct` instead of `class`
-* custom SQL code is prefered
-* custom code is prefered, but you can add toolset by executing macros
-
-It will not use
-because all instances
-
-Key notes:
-* models must allow all fields to be Nil, all validations as method override
-
-Toolset for creating REST Api in Crystal Language.
-
 [![Dependency Status](https://shards.rocks/badge/github/akwiatkowski/crystal_api/status.svg)](https://shards.rocks/github/akwiatkowski/crystal_api)
 [![devDependency Status](https://shards.rocks/badge/github/akwiatkowski/crystal_api/dev_status.svg)](https://shards.rocks/github/akwiatkowski/crystal_api)
 [![Build Status](https://travis-ci.org/akwiatkowski/crystal_api.svg?branch=master)](https://travis-ci.org/akwiatkowski/crystal_api)
 
 
-## Roadmap
+`crystal_api` is a set of tools to allow create **very fast** JSON APIs.
 
-- [ ] Utilize singleton-like approach to get `service`
-- [ ] Rename `service` to something like `persistor`
-- [ ] Add scope method to model Mode.scope({where: Hash, page: Int32, per_page: Int32, order: String})
-- [ ] One method for fetching
-- [ ] Models should be immutable
-- [ ] Update class method which gets
+Key notes:
+* all models are `struct` instead of `class` (like in [active_record.cr][https://github.com/waterlink/active_record.cr])
+* custom SQL requests are preferred and encouraged
+* but you can use one macro to create all REST (no customization)
+* there are some Rails-like methods (coming soon)
+* logic need to be customized
+
+
+
+## Roadmap
 
 - [x] Fix DB mapping to allow create database - add types of columns to definition list
 - [x] Check and fix JSON mapping
@@ -45,373 +29,49 @@ Toolset for creating REST Api in Crystal Language.
 - [x] [`devise`](https://github.com/plataformatec/devise) compatible sign in controller
 - [x] [JWT](https://jwt.io/) request authentication
 - [x] Initial rights managament
-- [ ] Other DB engines (partially refactored)
-- [ ] More predefined/sample controllers
+- [ ] Utilize singleton-like approach to get `service`
+- [ ] Rename `service` to something better
+- [ ] Add scope method to model Mode.scope({where: Hash, page: Int32, per_page: Int32, order: String})
+- [ ] One method for fetching
+- [ ] Models should be immutable
 - [ ] Websockets
 
 ## Usage
 
-1. Create empty crystal project:
+Please check [spec](https://github.com/akwiatkowski/crystal_api/tree/master/spec) first.
 
-    `crystal init app crystal_api_sample`
+### Fast full REST
 
-2. Add `crystal_api` to `shard.yml`. Example:
+```crystal
+pg_connect_from_yaml("config/database.yml")
 
-    ```Yaml
-    name: crystal_api_sample
-    version: 0.1.0
+# all fields must be union with Nil
+crystal_model(EventModel, id : (Int32 | Nil) = nil, name : (String | Nil) = nil)
 
-    authors:
-      - Crystal Guy <crystal@crystal.org>
+# magic macro
+# crystal_resource_full_rest(<name>, <resource path without '/' >, <DB table name>, <Model struct>)
+crystal_resource_full_rest(event, events, events, EventModel)
 
-    dependencies:
-      crystal_api:
-        github: "akwiatkowski/crystal_api"
+# create table if not exists
+crystal_migrate_event
 
-    license: MIT
-    ```
-
-3. Update shards (Crystal libraries):
-
-   `shards update`
-
-4.  Configure database (PostgreSQL) access and create `CrystalApi::App` instance.
-
-    * inline:
-
-      ```Crystal
-      a = CrystalApi::App.new( DbAdapter.new(user: "crystal_user", password: "crystal_password", database: "crystal", host: "localhost") )
-      ```
-
-
-    * by config file
-
-      Create Postgresql connection file in `config/database.yml` using sample
-      from `config/database.yml.sample` from `crystal_api` repository.
-
-      ```Yaml
-      host: localhost
-      database: crystal
-      user: crystal_user
-      password: crystal_password
-      ```   
-
-      And set path to Postgresql config file by adding in `src/crystal_api_sample.cr`
-
-      ```Crystal
-      a = CrystalApi::App.new( DbAdapter.new(config_path: "config/database.yml") )
-      ```
-
-5. Create model representing data fetched from Postgresql:
-
-    ```Crystal
-    class EventModel < CrystalApi::CrystalModel
-      def initialize(_db_id, _name)
-        @db_id = _db_id as Int32
-        @name = _name as (String | Nil)
-      end
-
-      getter :db_id, :name
-
-      JSON.mapping({
-        "db_id": Int32,
-        "name": (String | Nil),
-      })
-
-      DB_COLUMNS = {
-        # "id" is default
-        "name" => "varchar(255)",
-      }
-      DB_TABLE = "events"
-    end
-    ```
-
-    Notes:
-
-    * nullable columns must use union with `Nil` class
-    * all columns should be defined in constructor, which will be utilized in `Service` class
-    * JSON mapping is used when rendereing JSON
-    * DB_COLUMNS are used only when creating table
-    * DB_TABLE is the database table name
-
-6. Create service class which performs DB operations.
-
-    ```Crystal
-    class EventsService < CrystalApi::RestService
-      def initialize(a)
-        @adapter = a
-        @table_name = EventModel::DB_TABLE
-
-        # create table if not exists
-        create_table(EventModel::DB_COLUMNS)
-      end
-
-      def self.from_row(rh)
-        return EventModel.new(rh["id"], rh["name"])
-      end
-    end
-    ```
-
-    Notes:
-
-    * `EventsService.from_row(rh)` instantiates model from Hash-like
-      response from DB adapter
-
-7. Create controller class with defined list of actions and REST path.
-
-    ```Crystal
-    class EventsController < CrystalApi::CrystalApi::Controllers::JsonRestApiController
-      def initialize(s)
-        @service = s
-
-        @actions = [
-          "index",
-          "show",
-          "create",
-          "update",
-          "delete"
-        ]
-
-        @path = "/events"
-        @resource_name = "event"
-      end
-    end
-    ```
-
-    Notes:
-
-    * `@resource_name` is used in `update` and `create`
-    * `@path` deteremine all endpoints path
-
-8. Create and run app
-
-    ```Crystal
-    # a = CrystalApi::App.new(DbAdapter.new(...))
-    # it is already defined
-    a.port = 8002
-    a.add_controller( EventsController.new(EventsService.new(a.adapter)) )
-    a.start
-    ```
-
-
-## Index
-
-GET http://localhost:8002/events
-
-```Bash
-curl -H "Content-Type: application/json" -X GET http://localhost:8002/events
+# set port
+Kemal.config.port = 8002
+# run, this run migrations before running the HTTP server
+CrystalInit.start
 ```
 
-## Show
+### Custom API
 
-GET http://localhost:8002/events/:id
+Please check [short sample](https://github.com/akwiatkowski/crystal_api/tree/master/spec/apis/payments).
+This is API for money transfers. User has its account and assigned payments:
+incoming (external money transfer), outgoing (user withdraw money), transfer
+(user's account money to another user).
 
-```Bash
-curl -H "Content-Type: application/json" -X GET http://localhost:8002/events/1
-```
+### Rails like methods
 
-But first create an Event :)
-
-## Create
-
-POST http://localhost:8002/events
-
-```Bash
-curl -H "Content-Type: application/json" -X POST -d '{"event":{"name": "test1"}}' http://localhost:8002/events
-```
-
-## Update
-
-PUT http://localhost:8002/events/:id
-
-```Bash
-curl -H "Content-Type: application/json" -X PUT -d '{"event":{"name": "test2"}}' http://localhost:8002/events/1
-```
-
-## Delete
-
-DELETE http://localhost:8002/events/:id
-
-```Bash
-curl -H "Content-Type: application/json" -X DELETE http://localhost:8002/events/1
-```
-
-## Devise sign in, authentication and authorization
-
-```Crystal
-require "crystal_api"
-
-class DbAdapter < CrystalApi::Adapters::PgAdapter
-end
-
-class UserModel < CrystalApi::CrystalModel
-  def initialize(_db_id, _email)
-    @db_id = _db_id as Int32
-    @email = _email as String
-  end
-
-  getter :db_id, :email
-
-  JSON.mapping({
-    "db_id": Int32,
-    "email": String,
-  })
-
-  DB_COLUMNS = {
-    # "id" is default
-    "email" => "text",
-  }
-  DB_TABLE = "users"
-end
-
-class UsersService < CrystalApi::RestService
-  def initialize(a)
-    @adapter = a
-    @table_name = UserModel::DB_TABLE
-  end
-
-  def self.from_row(rh)
-    return UserModel.new(rh["id"], rh["email"])
-  end
-end
-
-class UsersController < CrystalApi::Controllers::JsonRestApiController
-  def initialize(s)
-    @service = s
-
-    @actions = [
-      "index",
-      "show",
-      "create",
-      "update",
-      "delete"
-    ]
-
-    @path = "/users"
-    @resource_name = "user"
-  end
-end
-
-class SessionService < CrystalApi::DeviseSessionService
-  def initialize(a)
-    @adapter = a
-    @table_name = UserModel::DB_TABLE
-  end
-
-  def self.from_row(rh)
-    return UserModel.new(rh["id"], rh["email"])
-  end
-end
-```
-
-This part is similar as described above.
-
-```Crystal
-class SessionController < CrystalApi::Controllers::DeviseSessionApiController
-  # def initialize(s, secret_key = SecureRandom.hex)
-  #   @service = s
-  #   @path = "/session"
-  #   @resource_name = "user"
-  # end
-end
-```
-
-`CrystalApi::Controllers::DeviseSessionApiController` allow to sign in just like
-`Rails` `devise` gem. It will return `JWT` token.
-
-```Crystal
-a = CrystalApi::App.new(DbAdapter.new(...))
-a.port = 8002
-a.add_controller( UsersController.new(UsersService.new(a.adapter)) )
-
-secret_key = "secret"
-session_controller = SessionController.new(SessionService.new(a.adapter), secret_key: secret_key)
-```
-
-You can provide `secret_key` the way you would like, but you can leave it.
-In that case `secret_key` will be random generated everytime you will start server.
-
-```Crystal
-a.add_controller(session_controller)
-```
-
-As every `Controller` you have to add it.
-
-```Crystal
-a.auth.can!("GET", "/users/:id", "regular")
-```
-
-In this example we want to allow signed user to have access only on this
-endpoint. If you want to add access to not signed users add line below.
-
-```Crystal
-a.auth.can!("GET", "/users/:id", "nil")
-```
-
-Next few line are not so beautiful, but they link sign in `SessionController`
-with `CrystalApi::AuthRouteHandler`.
-
-```Crystal
-a.auth.proc = -> (context : HTTP::Server::Context, auth : CrystalApi::CrystalAuth) {
-  # to allow sign in of not signed users
-  if context.request.path == "/session"
-    return true
-  end
-
-  if context.params.has_key?("token")
-    user = session_controller.token_to_user(context.params["token"].to_s)
-    if user
-      return auth.can?(context, "regular")
-    else
-      return auth.can?(context, "nil")
-    end
-  end
-
-  return false
-}
-```
-
-This move authorization logic into `CrystalApi::AuthRouteHandler`.
-
-```Crystal
-a.start
-```
-
-Now you can start application, and test it.
-
-```Bash
-curl -H "Content-Type: application/json" -X POST -d '{"user":{"email": "email@email.org", "password": "password"}}' http://localhost:8002/session
-```
-
-Which will return:
-
-```Json
-{"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo2Mjg5fQ.s4njjtCl1Ch2K_5RJn-9lsNbr49bUWlmcJOAllP5GNI"}
-```
-
-And now you can make authenticated API calls:
-
-```Bash
-curl -H "Content-Type: application/json" -X GET -d '{"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo2Mjg5fQ.s4njjtCl1Ch2K_5RJn-9lsNbr49bUWlmcJOAllP5GNI"}' http://localhost:8002/users/1
-```
-
-Which returns:
-
-```Json
-{"db_id":1,"email":"admin@domain.org"}
-```
-
-When you try not to provide correct token:
-
-```Bash
-curl -H "Content-Type: application/json" -X GET -d '{"token":"wrong_token"}' http://localhost:8002/users/1
-```
-
-You will have an error with 403 forbidden HTTP status:
-
-```
-{"error": "forbidden"}
-```
+At this moment I'm refactoring and adding code to easier DB operations.
+Readme will be updated after that moment.
 
 ## Contributing
 

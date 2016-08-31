@@ -8,9 +8,7 @@ crystal_model(
   user_id : (Int32 | Nil) = nil,
   destination_user_id : (Int32 | Nil) = nil,
 )
-crystal_resource_convert(payment, Payment)
-crystal_resource_migrate(payment, payments, Payment)
-crystal_resource_model_methods(payment, payments, Payment)
+crystal_resource(payment, payments, Payment)
 
 crystal_migrate_payment
 crystal_clear_table_payment

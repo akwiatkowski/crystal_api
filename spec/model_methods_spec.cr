@@ -95,6 +95,19 @@ describe CrystalApi do
     )
     payments.size.should eq limit
 
+    # 7. delete last
+    limit = 1
+    payments = Payment.fetch(
+      limit: limit,
+      order: "id desc"
+    )
+    payments[0].delete
+
+    # 8. find(id) -> not exist
+    payments = Payment.fetch(where: {"id" => user_id})
+    payments.size.should eq 0
+
+
     # close after
     CrystalInit.stop
   end

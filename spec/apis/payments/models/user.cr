@@ -7,9 +7,7 @@ crystal_model(
   hashed_password : (String | Nil) = nil,
   handle : (String | Nil) = nil
 )
-crystal_resource_convert(user, User)
-crystal_resource_migrate(user, users, User)
-crystal_resource_model_methods(user, users, User)
+crystal_resource(user, users, User)
 
 crystal_migrate_user
 crystal_clear_table_user
