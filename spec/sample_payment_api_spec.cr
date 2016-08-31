@@ -3,6 +3,14 @@ require "./apis/payments/payments_api"
 
 describe CrystalApi do
   it "run server" do
+    # connect DB, start migration
+    # TODO put in something like prerun
+    pg_connect_from_yaml($db_yaml_path)
+    crystal_migrate_payment
+    crystal_migrate_user
+    Payment.delete_all
+    User.delete_all
+
     sample_user1_email = "email1@email.org"
     sample_user1_handle = "user1"
     sample_user1_password = "password1"
@@ -89,10 +97,7 @@ describe CrystalApi do
 
 
     # run server
-    puts "Run kemal"
-    start_http
-
-    puts "Kemal is ready"
+    start_kemal
 
     # sign in
     http = HTTP::Client.new("localhost", Kemal.config.port)
@@ -143,12 +148,7 @@ describe CrystalApi do
     new_balance.should eq user1.balance
     new_balance.should eq (old_balance - transfer_amount)
 
-    stop_http
-
+    clear_kemal
   end
 
-  it "run server 2" do
-
-    
-  end
 end

@@ -11,8 +11,7 @@ crystal_resource_convert(user, User)
 crystal_resource_migrate(user, users, User)
 crystal_resource_model_methods(user, users, User)
 
-crystal_migrate_user
-User.delete_all
+
 
 struct User
   # Return id in UserHash if user is signed ok

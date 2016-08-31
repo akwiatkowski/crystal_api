@@ -1,7 +1,5 @@
 # require "crystal_api"
 
-pg_connect_from_yaml($db_yaml_path)
-
 require "./models/payment"
 require "./models/user"
 
