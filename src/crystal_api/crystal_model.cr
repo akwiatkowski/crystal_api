@@ -14,7 +14,7 @@ macro crystal_model(name, *properties)
 
     COLUMNS = [
       {% for property in properties %}
-        {{property.var}},
+        "{{property.var}}",
       {% end %}
     ]
 

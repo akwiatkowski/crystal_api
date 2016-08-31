@@ -22,6 +22,28 @@ macro crystal_resource_migrate(resource_name, resource_table, model_name)
   end
 end
 
+macro crystal_resource_model_methods(resource_name, resource_table, model_name)
+  # magic migration
+  def crystal_migrate_{{resource_name}}
+    # handler = Kemal::Config::HANDLERS.select{|h| h.as?(Kemal::CrystalApi)}.first as Kemal::CrystalApi
+    # service = handler.crystal_service
+    service = CrystalService.instance
+
+    sql = {{model_name}}.create_table_sql("{{resource_table}}")
+    result = service.execute_sql(sql)
+  end
+
+  def {{model_name}}.service
+    CrystalService.instance
+  end
+
+  def {{model_name}}.delete_all
+    service.execute_sql("delete from \"{{resource_table}}\";")
+  end
+end
+
+
+
 
 
 macro crystal_resource(resource_name, resource_path, resource_table, model_name)

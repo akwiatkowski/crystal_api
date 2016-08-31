@@ -2,6 +2,19 @@
 
 ## Warning! There is massive update in progress which will break everything!
 
+`crystal_api` is a set of helpful tools to create JSON APIs.
+
+It sacrifise elastic approach like in [active_record.cr][https://github.com/waterlink/active_record.cr]
+to maximize performance for need to be more explicit.
+
+Key notes:
+* all models are `struct` instead of `class`
+* custom SQL code is prefered
+* custom code is prefered, but you can add toolset by executing macros
+
+It will not use
+because all instances
+
 Key notes:
 * models must allow all fields to be Nil, all validations as method override
 
@@ -13,6 +26,13 @@ Toolset for creating REST Api in Crystal Language.
 
 
 ## Roadmap
+
+- [ ] Utilize singleton-like approach to get `service`
+- [ ] Rename `service` to something like `persistor`
+- [ ] Add scope method to model Mode.scope({where: Hash, page: Int32, per_page: Int32, order: String})
+- [ ] One method for fetching
+- [ ] Models should be immutable
+- [ ] Update class method which gets
 
 - [x] Fix DB mapping to allow create database - add types of columns to definition list
 - [x] Check and fix JSON mapping
