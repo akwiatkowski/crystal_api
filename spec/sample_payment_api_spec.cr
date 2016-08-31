@@ -23,9 +23,8 @@ describe CrystalApi do
 
     # create user 1
     h = {"email" => sample_user1_email}
-    result = service.get_filtered_objects("users", h)
-    collection = crystal_resource_convert_user(result)
-    if collection.size == 0
+    user = User.fetch_one(where: h)
+    if user.nil?
       # create user
       puts "Create user #{sample_user1_email}"
 
@@ -34,23 +33,18 @@ describe CrystalApi do
         "handle"          => sample_user1_handle,
         "hashed_password" => Crypto::MD5.hex_digest(sample_user1_password),
       }
-      result = service.insert_object("users", h)
-      collection = crystal_resource_convert_user(result)
-
-      puts "User created"
-      puts collection.inspect
+      user = User.create(h)
+      puts "User created - #{user.inspect}"
     else
-      puts "User already available"
-      puts collection.inspect
+      puts "User already available #{user.inspect}"
     end
-    user1 = collection[0]
+    user1 = user.not_nil!
     user1_id = user1.id
 
     # create user 2
     h = {"email" => sample_user2_email}
-    result = service.get_filtered_objects("users", h)
-    collection = crystal_resource_convert_user(result)
-    if collection.size == 0
+    user = User.fetch_one(where: h)
+    if user.nil?
       # create user
       puts "Create user #{sample_user2_email}"
 
@@ -59,16 +53,12 @@ describe CrystalApi do
         "handle"          => sample_user2_handle,
         "hashed_password" => Crypto::MD5.hex_digest(sample_user2_password),
       }
-      result = service.insert_object("users", h)
-      collection = crystal_resource_convert_user(result)
-
-      puts "User created"
-      puts collection.inspect
+      user = User.create(h)
+      puts "User created - #{user.inspect}"
     else
-      puts "User already available"
-      puts collection.inspect
+      puts "User already available #{user.inspect}"
     end
-    user2 = collection[0]
+    user2 = user.not_nil!
     user2_id = user2.id
 
     # create initial payments

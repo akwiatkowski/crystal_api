@@ -130,6 +130,26 @@ class CrystalService
       )
   end
 
+  def insert_into_table(collection : String, hash : Hash = {} of String => PgType)
+    columns = [] of String
+    values = [] of String
+
+    hash.keys.each do |column|
+      columns << column
+      value = hash[column]
+      values << self.class.escape_value(value)
+    end
+
+    sql = "insert into #{collection} (#{columns.join(", ")}) values (#{values.join(", ")}) returning *;"
+
+    db = @pg.connection
+    result = db.exec(sql)
+    @pg.release
+    return result
+  end
+
+  ##########3
+
   def get_filtered_objects(collection, hash : Hash)
     wc = self.class.convert_to_where_clause(hash)
 

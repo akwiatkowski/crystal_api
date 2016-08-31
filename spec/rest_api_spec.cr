@@ -85,18 +85,16 @@ describe CrystalApi do
     collection = crystal_resource_convert_event(result)
 
     # find
-    result = service.get_filtered_objects("events", h)
-    collection = crystal_resource_convert_event(result)
+    collection = EventModel.fetch_all(where: h)
 
     collection.size.should eq 1
     collection[0].name.should eq name
 
     # delete
-    service.delete_object("events", collection[0].id)
+    collection[0].delete
 
     # find after delete
-    result = service.get_filtered_objects("events", h)
-    collection = crystal_resource_convert_event(result)
+    collection = EventModel.fetch_all(where: h)
 
     collection.size.should eq 0
 

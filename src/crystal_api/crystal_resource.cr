@@ -54,6 +54,14 @@ macro crystal_resource_model_methods(resource_name, resource_table, model_name)
     CrystalService.instance
   end
 
+  def self.execute_sql(q : String)
+    service.execute_sql(q)
+  end
+
+  def execute_sql(q : String)
+    self.class.execute_sql(q)
+  end
+
   def self.delete_all
     service.execute_sql("delete from \"{{resource_table}}\";")
   end
@@ -93,12 +101,23 @@ macro crystal_resource_model_methods(resource_name, resource_table, model_name)
     end
   end
 
+  def self.create(h : Hash(String, PgType))
+    db_result = service.insert_into_table(
+      collection: "{{resource_table}}",
+      hash: h
+    )
+    resources = crystal_resource_convert_{{resource_name}}(db_result)
+    if resources.size > 0
+      return resources[0]
+    else
+      return nil
+    end
+  end
+
+
   def self.update(id : Int32, h : Hash(String, PgType))
   end
 
-  def self.insert(h : Hash(String, PgType))
-
-  end
 
   def delete
     self.class.service.delete_object("{{resource_table}}", self.id)

@@ -55,13 +55,15 @@ struct User
     return uh
   end
 
-  def incoming_payments_amount
-    sql_incoming = "select sum(payments.amount) as sum
-      from payments
-      where payments.user_id = #{self.id}
-      and payments.payment_type = '#{Payment::TYPE_INCOMING}';"
+  private def payment_sql(t : String)
+    return "select sum(payments.amount) as sum
+    from payments
+    where payments.user_id = #{self.id}
+    and payments.payment_type = '#{t}';"
+  end
 
-    result = CrystalService.instance.execute_sql(sql_incoming)
+  def incoming_payments_amount
+    result = execute_sql( payment_sql(Payment::TYPE_INCOMING) )
     amount = result.rows[0][0]
 
     if amount.nil?
@@ -72,12 +74,7 @@ struct User
   end
 
   def outgoing_payments_amount
-    sql_incoming = "select sum(payments.amount) as sum
-      from payments
-      where payments.user_id = #{self.id}
-      and payments.payment_type = '#{Payment::TYPE_OUTGOING}';"
-
-    result = CrystalService.instance.execute_sql(sql_incoming)
+    result = execute_sql( payment_sql(Payment::TYPE_OUTGOING) )
     amount = result.rows[0][0]
 
     if amount.nil?
