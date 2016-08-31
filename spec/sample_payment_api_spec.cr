@@ -1,5 +1,5 @@
 require "./spec_helper"
-require "./apis/payments_api"
+require "./apis/payments/payments_api"
 
 describe CrystalApi do
   it "run server" do
@@ -90,15 +90,7 @@ describe CrystalApi do
 
     # run server
     puts "Run kemal"
-
-    spawn do
-      Kemal.run
-    end
-
-    # wait for Kemal is ready
-    while Kemal.config.server.nil?
-      sleep 0.01
-    end
+    start_http
 
     puts "Kemal is ready"
 
@@ -151,6 +143,7 @@ describe CrystalApi do
     new_balance.should eq user1.balance
     new_balance.should eq (old_balance - transfer_amount)
 
+    stop_http
 
   end
 end

@@ -1,34 +1,13 @@
 require "./spec_helper"
+require "./apis/rest_events/api"
 
-def http_run(method = "GET", ep = "", payload_string = "")
-  return "curl --silent -H \"Content-Type: application/json\" -X #{method} #{ep} #{payload_string}"
-end
-#
-# # crystal_api is powered by some powerful macros
-# # it must be put not within a block
-#
-# path = "config/travis.yml"
-# local_path = "config/database.yml"
-# path = local_path if File.exists?(local_path)
-# pg_connect_from_yaml(path)
-#
-# crystal_model(EventModel, id : (Int32 | Nil) = nil, name : (String | Nil) = nil)
-# crystal_resource event, events, events, EventModel
-# Kemal.config.port = 8002
-#
-# # run Kemal not to block spec code
-# spawn do
-#   Kemal.run
-# end
-#
+
+# run Kemal not to block spec code
+
+
 # describe CrystalApi do
 #   it "check simple CRUD endpoint" do
-#
-#     # wait for Kemal is ready
-#     while Kemal.config.server.nil?
-#       sleep 0.1
-#     end
-#
+
 #     crystal_migrate_event # TODO a bit dirty at this moment
 #
 #     port = 8002
@@ -90,7 +69,7 @@ end
 #
 #
 #     # close after
-#     Kemal.config.server.not_nil!.close
+#
 #   end
 #
 #   it "get object by name" do
@@ -117,5 +96,6 @@ end
 #     collection = crystal_resource_convert_event(result)
 #
 #     collection.size.should eq 0
+
 #   end
 # end
