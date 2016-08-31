@@ -1,6 +1,6 @@
 module Kemal
   class Config
-    INITIALIZERS       = [] of Proc(Nil)
+    INITIALIZERS = [] of Proc(Nil)
 
     def setup_initializers
       puts INITIALIZERS.size

@@ -47,11 +47,11 @@ post "/transfer" do |env|
     destination_user = users[0]
 
     h = {
-      "user_id"           => user.id,
+      "user_id"             => user.id,
       "destination_user_id" => destination_user.id,
-      "amount"          => amount,
+      "amount"              => amount,
       # "created_at" => Time.now,
-      "payment_type" => Payment::TYPE_TRANSFER
+      "payment_type" => Payment::TYPE_TRANSFER,
     }
 
     result = env.crystal_service.insert_object("payments", h)

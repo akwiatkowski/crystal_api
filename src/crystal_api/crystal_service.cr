@@ -42,10 +42,38 @@ class Kemal::CrystalApi < HTTP::Handler
     password = config["password"].to_s
     return "postgresql://#{user}:#{password}@#{host}/#{database}"
   end
-
 end
 
 class CrystalService
+  def self.escape_value(value)
+    if value.is_a?(Int32)
+      return value.to_s
+    elsif value.is_a?(String)
+      return "'" + value.to_s + "'"
+    else
+      return "'" + value.to_s + "'"
+    end
+  end
+
+  def self.convert_to_where_clause(hash : Hash) : String
+    columns = [] of String
+    values = [] of String
+
+    hash.keys.each do |column|
+      columns << column
+      value = hash[column]
+      values << escape_value(value)
+    end
+
+    conditions = [] of String
+
+    columns.each_with_index do |column, i|
+      conditions << "#{column} = #{values[i]}"
+    end
+
+    return "#{conditions.join(" and ")}"
+  end
+
   def initialize(@pg : ConnectionPool(PG::Connection))
   end
 
@@ -73,25 +101,11 @@ class CrystalService
   end
 
   def get_filtered_objects(collection, hash : Hash)
-    columns = [] of String
-    values = [] of String
-
-    hash.keys.each do |column|
-      columns << column
-      value = hash[column]
-      values << escape_value(value)
-    end
+    wc = self.class.convert_to_where_clause(hash)
 
     sql = "select * from #{collection}"
-    if columns.size > 0
-      sql += " where "
-
-      conditions = [] of String
-      columns.each_with_index do |column, i|
-        conditions << "#{column} = #{values[i]}"
-      end
-
-      sql += "#{conditions.join(" and ")}"
+    if wc.size > 0
+      sql += " where #{wc}"
     end
     sql += ";"
 
@@ -101,16 +115,6 @@ class CrystalService
     return result
   end
 
-  def escape_value(value)
-    if value.is_a?(Int32)
-      return value.to_s
-    elsif value.is_a?(String)
-      return "'" + value.to_s + "'"
-    else
-      return "'" + value.to_s + "'"
-    end
-  end
-
   def insert_object(collection, hash)
     columns = [] of String
     values = [] of String
@@ -118,7 +122,7 @@ class CrystalService
     hash.keys.each do |column|
       columns << column
       value = hash[column]
-      values << escape_value(value)
+      values << self.class.escape_value(value)
     end
 
     sql = "insert into #{collection} (#{columns.join(", ")}) values (#{values.join(", ")}) returning *;"
@@ -136,7 +140,7 @@ class CrystalService
     hash.keys.each do |column|
       columns << column
       value = hash[column]
-      values << escape_value(value)
+      values << self.class.escape_value(value)
     end
 
     sql = "update only #{collection} set (#{columns.join(", ")}) = (#{values.join(", ")}) where id = #{db_id} returning *;"
@@ -158,9 +162,8 @@ class CrystalService
 
   # Faster way to get CrystalService
   def self.instance
-    handler = Kemal::Config::HANDLERS.select{|h| h.as?(Kemal::CrystalApi)}.first as Kemal::CrystalApi
+    handler = Kemal::Config::HANDLERS.select { |h| h.as?(Kemal::CrystalApi) }.first.as(Kemal::CrystalApi)
     service = handler.crystal_service
     return service
   end
-
 end

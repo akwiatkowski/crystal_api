@@ -1,7 +1,7 @@
 class CrystalInit
-  INITIALIZERS       = [] of Proc(Nil)
+  INITIALIZERS = [] of Proc(Nil)
 
-  def self.start
+  def self.start_initializers
     if INITIALIZERS.size > 0
       puts("About to run #{INITIALIZERS.size} initializers")
 
@@ -11,7 +11,10 @@ class CrystalInit
 
       puts("Initializers executed")
     end
+  end
 
+  def self.start
+    start_initializers
     Kemal.run
   end
 
@@ -19,6 +22,10 @@ class CrystalInit
     spawn do
       start
     end
+  end
+
+  def self.start_without_server
+    start_initializers
   end
 
   def self.wait_for_ready
@@ -34,8 +41,8 @@ class CrystalInit
 
   def self.stop
     Kemal.config.handlers.clear
-  	Kemal::RouteHandler::INSTANCE.tree = Radix::Tree(Kemal::Route).new
-    Kemal.config.server.not_nil!.close
+    Kemal::RouteHandler::INSTANCE.tree = Radix::Tree(Kemal::Route).new
+    Kemal.config.server.not_nil!.close if Kemal.config.server
   end
 
   def self.reset

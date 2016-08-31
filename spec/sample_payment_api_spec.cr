@@ -5,7 +5,7 @@ CrystalInit.reset # reset migrations, delete_all, ...
 require "./apis/payments/payments_api"
 
 describe CrystalApi do
-  it "run server" do
+  it "run payment transfer API, perform transfer, get user balance" do
     # connect DB, start migration
     # TODO put in something like prerun
     pg_connect_from_yaml($db_yaml_path)
@@ -71,27 +71,26 @@ describe CrystalApi do
     user2 = collection[0]
     user2_id = user2.id
 
-
     # create initial payments
     h = {
-      "user_id"           => user1_id,
-      "amount"          => 1000,
-      "payment_type" => Payment::TYPE_INCOMING
+      "user_id"      => user1_id,
+      "amount"       => 1000,
+      "payment_type" => Payment::TYPE_INCOMING,
     }
     result = service.insert_object("payments", h)
 
     h = {
-      "user_id"           => user1_id,
+      "user_id"             => user1_id,
       "destination_user_id" => user2_id,
-      "amount"          => 500,
-      "payment_type" => Payment::TYPE_TRANSFER
+      "amount"              => 500,
+      "payment_type"        => Payment::TYPE_TRANSFER,
     }
     result = service.insert_object("payments", h)
 
     h = {
-      "user_id"           => user2_id,
-      "amount"          => 200,
-      "payment_type" => Payment::TYPE_OUTGOING
+      "user_id"      => user2_id,
+      "amount"       => 200,
+      "payment_type" => Payment::TYPE_OUTGOING,
     }
     result = service.insert_object("payments", h)
 
@@ -145,5 +144,4 @@ describe CrystalApi do
     # close after
     CrystalInit.stop
   end
-
 end

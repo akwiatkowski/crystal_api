@@ -5,7 +5,7 @@ CrystalInit.reset # reset migrations, delete_all, ...
 require "./apis/rest_events/api"
 
 describe CrystalApi do
-  it "check simple CRUD endpoint" do
+  it "run simple REST API" do
     # connect DB, start migration
     pg_connect_from_yaml($db_yaml_path)
     CrystalInit.start_spawned_and_wait
@@ -71,7 +71,7 @@ describe CrystalApi do
     CrystalInit.stop
   end
 
-  it "get object by name" do
+  it "get object by name using service" do
     # connect DB, start migration
     pg_connect_from_yaml($db_yaml_path)
     CrystalInit.start_spawned_and_wait

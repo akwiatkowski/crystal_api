@@ -37,9 +37,30 @@ macro crystal_resource_model_methods(resource_name, resource_table, model_name)
     service.execute_sql("delete from \"{{resource_table}}\";")
   end
 
+  def {{model_name}}.fetch(where = {} of String => PgType)
+    wc = CrystalService.convert_to_where_clause(where)
+
+    sql = "select * from \"{{resource_table}}\""
+    if wc.size > 0
+      sql += " where #{wc}"
+    end
+    sql += ";"
+
+    db_result = service.execute_sql(sql)
+    resources = crystal_resource_convert_{{resource_name}}(db_result)
+
+    return resources
+  end
+
+  # It is migration style, but require class methods
+  # TODO integrate class methods and move to migration
+  def crystal_clear_table_now_{{resource_name}}
+    {{model_name}}.delete_all
+  end
+
   def crystal_clear_table_{{resource_name}}
     CrystalInit::INITIALIZERS << ->{
-      {{model_name}}.delete_all
+      crystal_clear_table_now_{{resource_name}}
     }
   end
 end
