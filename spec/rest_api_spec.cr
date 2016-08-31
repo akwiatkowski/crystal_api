@@ -1,4 +1,7 @@
 require "./spec_helper"
+
+CrystalInit.reset # reset migrations, delete_all, ...
+
 require "./apis/rest_events/api"
 
 describe CrystalApi do

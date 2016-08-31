@@ -2,9 +2,14 @@ class CrystalInit
   INITIALIZERS       = [] of Proc(Nil)
 
   def self.start
-    puts "Initializing #{INITIALIZERS.size}"
-    INITIALIZERS.each do |p|
-      p.call
+    if INITIALIZERS.size > 0
+      puts("About to run #{INITIALIZERS.size} initializers")
+
+      INITIALIZERS.each do |p|
+        p.call
+      end
+
+      puts("Initializers executed")
     end
 
     Kemal.run
@@ -12,7 +17,7 @@ class CrystalInit
 
   def self.start_spawned
     spawn do
-      Kemal.run
+      start
     end
   end
 

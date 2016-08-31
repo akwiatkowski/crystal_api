@@ -12,7 +12,8 @@ crystal_resource_convert(payment, Payment)
 crystal_resource_migrate(payment, payments, Payment)
 crystal_resource_model_methods(payment, payments, Payment)
 
-
+crystal_migrate_payment
+crystal_clear_table_payment
 
 struct Payment
   TYPE_INCOMING = "incoming"

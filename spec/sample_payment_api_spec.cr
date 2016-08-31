@@ -1,4 +1,7 @@
 require "./spec_helper"
+
+CrystalInit.reset # reset migrations, delete_all, ...
+
 require "./apis/payments/payments_api"
 
 describe CrystalApi do
@@ -6,10 +9,7 @@ describe CrystalApi do
     # connect DB, start migration
     # TODO put in something like prerun
     pg_connect_from_yaml($db_yaml_path)
-    crystal_migrate_payment
-    crystal_migrate_user
-    Payment.delete_all
-    User.delete_all
+    CrystalInit.start_spawned_and_wait
 
     sample_user1_email = "email1@email.org"
     sample_user1_handle = "user1"
@@ -95,10 +95,6 @@ describe CrystalApi do
     }
     result = service.insert_object("payments", h)
 
-
-    # run server
-    start_kemal
-
     # sign in
     http = HTTP::Client.new("localhost", Kemal.config.port)
     result = http.post_form("/sign_in", {"email" => sample_user1_email, "password" => sample_user1_password})
@@ -139,8 +135,6 @@ describe CrystalApi do
     result = http.exec("POST", "/transfer", json_headers, params.to_json)
     json = JSON.parse(result.body)
 
-    # puts json.inspect
-
     # get new user balance
     http = HTTP::Client.new("localhost", Kemal.config.port)
     result = http.exec("GET", "/balance", headers)
@@ -148,7 +142,8 @@ describe CrystalApi do
     new_balance.should eq user1.balance
     new_balance.should eq (old_balance - transfer_amount)
 
-    clear_kemal
+    # close after
+    CrystalInit.stop
   end
 
 end
