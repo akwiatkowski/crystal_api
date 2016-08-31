@@ -58,40 +58,54 @@ macro crystal_resource_model_methods(resource_name, resource_table, model_name)
     service.execute_sql("delete from \"{{resource_table}}\";")
   end
 
-  def self.fetch(
+  def self.fetch_all(
       where : Hash = {} of String => PgType,
       limit : Int32 = 25,
       order : String = ""
     )
 
-    sql = "select * from \"{{resource_table}}\""
-
-    # where
-    wc = CrystalService.convert_to_where_clause(where)
-    if wc.size > 0
-      sql += " where #{wc}"
-    end
-
-    # order
-    if order != ""
-      sql += " order by #{order}"
-    end
-
-    if limit > 0
-      sql += " limit #{limit}"
-    end
-
-    sql += ";"
-
-    db_result = service.execute_sql(sql)
+    db_result = service.fetch_all(
+      collection: "{{resource_table}}",
+      where: where,
+      limit: limit,
+      order: order
+    )
     resources = crystal_resource_convert_{{resource_name}}(db_result)
 
     return resources
   end
 
+  def self.fetch_one(
+      where : Hash = {} of String => PgType,
+      order : String = ""
+    )
+
+    resources = fetch_all(
+      where: where,
+      limit: 1,
+      order: order
+    )
+
+    if resources.size > 0
+      return resources[0]
+    else
+      return nil
+    end
+  end
+
+  def self.update(id : Int32, h : Hash(String, PgType))
+  end
+
+  def self.insert(h : Hash(String, PgType))
+
+  end
+
   def delete
     self.class.service.delete_object("{{resource_table}}", self.id)
   end
+
+
+
 end
 
 end
@@ -102,18 +116,17 @@ macro crystal_resource_full_rest(resource_name, resource_path, resource_table, m
   crystal_resource_model_methods({{resource_name}}, {{resource_table}}, {{model_name}})
 
   get "/{{resource_path}}" do |env|
-    db_result = env.crystal_service.get_all_objects("{{resource_table}}")
+    db_result = env.crystal_service.fetch_all("{{resource_table}}", limit: 0)
     resources = crystal_resource_convert_{{resource_name}}(db_result)
     resources.to_json
   end
 
   get "/{{resource_path}}/:id" do |env|
     object_id = env.params.url["id"].to_s.to_i
-    db_result = env.crystal_service.get_object("{{resource_table}}", object_id)
+    db_result = env.crystal_service.fetch_one("{{resource_table}}", where: {"id" => object_id})
     resources = crystal_resource_convert_{{resource_name}}(db_result)
-
     if resources.size > 0
-      resources.first.to_json
+      resources[0].to_json
     else
       nil.to_json
     end

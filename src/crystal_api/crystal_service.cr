@@ -77,6 +77,7 @@ class CrystalService
   def initialize(@pg : ConnectionPool(PG::Connection))
   end
 
+  # Execute plain SQL query
   def execute_sql(sql)
     db = @pg.connection
     result = db.exec(sql)
@@ -84,20 +85,49 @@ class CrystalService
     return result
   end
 
-  def get_all_objects(collection)
-    sql = "select * from #{collection};"
-    db = @pg.connection
-    result = db.exec(sql)
-    @pg.release
-    return result
+  # Fetch all model instances
+  def fetch_all(
+      collection : String,
+      where : Hash = {} of String => PgType,
+      limit : Int32 = 25,
+      order : String = ""
+    )
+
+    sql = "select * from \"#{collection}\""
+
+    # where
+    wc = CrystalService.convert_to_where_clause(where)
+    if wc.size > 0
+      sql += " where #{wc}"
+    end
+
+    # order
+    if order != ""
+      sql += " order by #{order}"
+    end
+
+    if limit > 0
+      sql += " limit #{limit}"
+    end
+
+    sql += ";"
+
+    db_result = execute_sql(sql)
+    return db_result
   end
 
-  def get_object(collection, id : (Int32 | String))
-    sql = "select * from #{collection} where id = #{id};"
-    db = @pg.connection
-    result = db.exec(sql)
-    @pg.release
-    return result
+  def fetch_one(
+      collection : String,
+      where : Hash = {} of String => PgType,
+      order : String = ""
+    )
+
+    return fetch_all(
+        collection: collection,
+        where: where,
+        limit: 1,
+        order: order
+      )
   end
 
   def get_filtered_objects(collection, hash : Hash)

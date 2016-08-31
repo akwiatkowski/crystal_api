@@ -40,7 +40,7 @@ describe CrystalApi do
     # test fetching
 
     # 1. find_by_email -> User
-    users = User.fetch(where: {"email" => sample_user1_email})
+    users = User.fetch_all(where: {"email" => sample_user1_email})
 
     users.size.should eq 1
     users[0].email.should eq sample_user1_email
@@ -48,15 +48,15 @@ describe CrystalApi do
     user_id = users[0].id
 
     # 2. find_by_email -> nil
-    users = User.fetch(where: {"email" => "makutas@posampas.com"})
+    users = User.fetch_all(where: {"email" => "makutas@posampas.com"})
     users.size.should eq 0
 
     # 3. find_all
-    users = User.fetch
+    users = User.fetch_all
     users.size.should eq 2
 
     # 4. find(id)
-    users = User.fetch(where: {"id" => user_id})
+    users = User.fetch_all(where: {"id" => user_id})
     users.size.should eq 1
     users[0].email.should eq sample_user1_email
     users[0].handle.should eq sample_user1_handle
@@ -76,7 +76,7 @@ describe CrystalApi do
     # test fetching
     # 5. where(user_id, payment_type, amount)
     amount = 2 * 10
-    payments = Payment.fetch(
+    payments = Payment.fetch_all(
       where: {
         "user_id"      => user_id,
         "payment_type" => Payment::TYPE_INCOMING,
@@ -89,7 +89,7 @@ describe CrystalApi do
 
     # 6. limit(5).order("id desc")
     limit = 5
-    payments = Payment.fetch(
+    payments = Payment.fetch_all(
       limit: limit,
       order: "id desc"
     )
@@ -97,16 +97,15 @@ describe CrystalApi do
 
     # 7. delete last
     limit = 1
-    payments = Payment.fetch(
+    payments = Payment.fetch_all(
       limit: limit,
       order: "id desc"
     )
     payments[0].delete
 
     # 8. find(id) -> not exist
-    payments = Payment.fetch(where: {"id" => user_id})
+    payments = Payment.fetch_all(where: {"id" => user_id})
     payments.size.should eq 0
-
 
     # close after
     CrystalInit.stop

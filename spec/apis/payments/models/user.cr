@@ -15,27 +15,24 @@ crystal_clear_table_user
 struct User
   # Return id in UserHash if user is signed ok
   def self.sign_in(email : String, password : String) : UserHash
-    service = CrystalService.instance
     h = {
       "email"           => email,
       "hashed_password" => Crypto::MD5.hex_digest(password),
     }
-    result = service.get_filtered_objects("users", h)
-    collection = crystal_resource_convert_user(result)
 
     # try sign in using handle
-    if collection.size == 0
+    user = User.fetch_one(where: h)
+    if user.nil?
       h = {
         "handle"          => email,
         "hashed_password" => Crypto::MD5.hex_digest(password),
       }
-      result = service.get_filtered_objects("users", h)
-      collection = crystal_resource_convert_user(result)
+      user = User.fetch_one(where: h)
     end
 
     uh = UserHash.new
-    if collection.size > 0
-      uh["id"] = collection[0].id
+    if user
+      uh["id"] = user.id
     end
     return uh
   end
@@ -45,17 +42,15 @@ struct User
     uh = UserHash.new
     return uh if user["id"].to_s == ""
 
-    service = CrystalService.instance
     h = {
       "id" => user["id"].to_s.to_i.as(Int32),
     }
-    result = service.get_filtered_objects("users", h)
-    collection = crystal_resource_convert_user(result)
+    user = User.fetch_one(h)
 
-    if collection.size > 0
-      uh["id"] = collection[0].id
-      uh["email"] = collection[0].email
-      uh["handle"] = collection[0].handle
+    if user
+      uh["id"] = user.id
+      uh["email"] = user.email
+      uh["handle"] = user.handle
     end
     return uh
   end

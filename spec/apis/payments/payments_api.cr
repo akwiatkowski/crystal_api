@@ -21,9 +21,8 @@ end
 get "/balance" do |env|
   cu = env.current_user
   if cu["id"]?
-    result = env.crystal_service.get_object("users", cu["id"].to_s.to_i)
-    resources = crystal_resource_convert_user(result)
-    resources[0].balance
+    user = User.fetch_one(where: {"id" => cu["id"]})
+    user.not_nil!.balance
   else
     nil
   end
@@ -33,18 +32,14 @@ post "/transfer" do |env|
   cu = env.current_user
   if cu["id"]?
     # current user
-    result = env.crystal_service.get_object("users", cu["id"].to_s.to_i)
-    users = crystal_resource_convert_user(result)
-    user = users[0]
+    user = User.fetch_one(where: {"id" => cu["id"]}).not_nil!
     balance = user.balance
 
     amount = env.params.json["amount"].to_s.to_i
     destination_user_id = env.params.json["destination_user_id"].to_s.to_i
 
     # destination user
-    result = env.crystal_service.get_object("users", destination_user_id)
-    users = crystal_resource_convert_user(result)
-    destination_user = users[0]
+    destination_user = User.fetch_one(where: {"id" => destination_user_id}).not_nil!
 
     h = {
       "user_id"             => user.id,
