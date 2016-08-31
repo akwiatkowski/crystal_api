@@ -6,4 +6,7 @@ crystal_model(EventModel, id : (Int32 | Nil) = nil, name : (String | Nil) = nil)
 crystal_resource(event, events, events, EventModel)
 crystal_resource_model_methods(event, events, EventModel)
 
+crystal_migrate_event
+crystal_clear_table_event
+
 Kemal.config.port = 8002

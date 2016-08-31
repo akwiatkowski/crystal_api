@@ -4,12 +4,8 @@ require "./apis/rest_events/api"
 describe CrystalApi do
   it "check simple CRUD endpoint" do
     # connect DB, start migration
-    # TODO put in something like prerun
     pg_connect_from_yaml($db_yaml_path)
-    crystal_migrate_event
-    EventModel.delete_all
-
-    start_kemal
+    CrystalInit.start_spawned_and_wait
 
     port = 8002
     endpoint = "/events"
@@ -68,19 +64,14 @@ describe CrystalApi do
 
     json["name"].should eq random_name2
 
-
     # close after
-    clear_kemal
+    CrystalInit.stop
   end
 
   it "get object by name" do
     # connect DB, start migration
-    # TODO put in something like prerun
     pg_connect_from_yaml($db_yaml_path)
-    crystal_migrate_event
-    EventModel.delete_all
-
-    start_kemal
+    CrystalInit.start_spawned_and_wait
 
     service = CrystalService.instance
 
@@ -106,6 +97,7 @@ describe CrystalApi do
 
     collection.size.should eq 0
 
-    clear_kemal
+    # close after
+    CrystalInit.stop
   end
 end

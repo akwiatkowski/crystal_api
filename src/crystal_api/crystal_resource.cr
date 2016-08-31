@@ -14,25 +14,21 @@ end
 
 macro crystal_resource_migrate(resource_name, resource_table, model_name)
   # magic migration
-  def crystal_migrate_{{resource_name}}
+  def crystal_migrate_now_{{resource_name}}
     sql = {{model_name}}.create_table_sql("{{resource_table}}")
     handler = Kemal::Config::HANDLERS.select{|h| h.as?(Kemal::CrystalApi)}.first as Kemal::CrystalApi
     service = handler.crystal_service
     result = service.execute_sql(sql)
   end
+
+  def crystal_migrate_{{resource_name}}
+    CrystalInit::INITIALIZERS << ->{
+      crystal_migrate_now_{{resource_name}}
+    }
+  end
 end
 
 macro crystal_resource_model_methods(resource_name, resource_table, model_name)
-  # magic migration
-  def crystal_migrate_{{resource_name}}
-    # handler = Kemal::Config::HANDLERS.select{|h| h.as?(Kemal::CrystalApi)}.first as Kemal::CrystalApi
-    # service = handler.crystal_service
-    service = CrystalService.instance
-
-    sql = {{model_name}}.create_table_sql("{{resource_table}}")
-    result = service.execute_sql(sql)
-  end
-
   def {{model_name}}.service
     CrystalService.instance
   end
@@ -40,15 +36,18 @@ macro crystal_resource_model_methods(resource_name, resource_table, model_name)
   def {{model_name}}.delete_all
     service.execute_sql("delete from \"{{resource_table}}\";")
   end
+
+  def crystal_clear_table_{{resource_name}}
+    CrystalInit::INITIALIZERS << ->{
+      {{model_name}}.delete_all
+    }
+  end
 end
-
-
-
-
 
 macro crystal_resource(resource_name, resource_path, resource_table, model_name)
   crystal_resource_convert({{resource_name}}, {{model_name}})
   crystal_resource_migrate({{resource_name}}, {{resource_table}}, {{model_name}})
+  crystal_resource_model_methods({{resource_name}}, {{resource_table}}, {{model_name}})
 
   get "/{{resource_path}}" do |env|
     db_result = env.crystal_service.get_all_objects("{{resource_table}}")
