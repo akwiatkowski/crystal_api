@@ -75,15 +75,25 @@ describe CrystalApi do
 
     # test fetching
     # 5. where(user_id, payment_type, amount)
+    amount = 2 * 10
     payments = Payment.fetch(
       where: {
         "user_id"      => user_id,
         "payment_type" => Payment::TYPE_INCOMING,
-        "amount"       => 2 * 10,
+        "amount"       => amount,
       }
     )
+    payments.size.should eq 1
+    payments[0].amount.should eq amount
+    payments[0].user_id.should eq user_id
 
-    puts payments.inspect
+    # 6. limit(5).order("id desc")
+    limit = 5
+    payments = Payment.fetch(
+      limit: limit,
+      order: "id desc"
+    )
+    payments.size.should eq limit
 
     # close after
     CrystalInit.stop

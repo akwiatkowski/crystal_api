@@ -37,13 +37,29 @@ macro crystal_resource_model_methods(resource_name, resource_table, model_name)
     service.execute_sql("delete from \"{{resource_table}}\";")
   end
 
-  def {{model_name}}.fetch(where = {} of String => PgType)
-    wc = CrystalService.convert_to_where_clause(where)
+  def {{model_name}}.fetch(
+      where = {} of String => PgType,
+      limit : Int32 = 25,
+      order : String = ""
+    )
 
     sql = "select * from \"{{resource_table}}\""
+
+    # where
+    wc = CrystalService.convert_to_where_clause(where)
     if wc.size > 0
       sql += " where #{wc}"
     end
+
+    # order
+    if order != ""
+      sql += " order by #{order}"
+    end
+
+    if limit > 0
+      sql += " limit #{limit}"
+    end
+
     sql += ";"
 
     db_result = service.execute_sql(sql)
