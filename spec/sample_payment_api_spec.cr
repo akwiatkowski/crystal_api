@@ -146,4 +146,9 @@ describe CrystalApi do
     stop_http
 
   end
+
+  it "run server 2" do
+
+    
+  end
 end
