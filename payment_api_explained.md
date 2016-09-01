@@ -378,7 +378,7 @@ balance = result.body.to_s.to_i
 
 This will get current user balance.
 
-```
+```crystal
 json_headers = HTTP::Headers.new
 json_headers["X-Token"] = token
 json_headers["Content-Type"] = "application/json"
