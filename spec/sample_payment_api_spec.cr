@@ -67,7 +67,7 @@ describe CrystalApi do
       "amount"       => 1000,
       "payment_type" => Payment::TYPE_INCOMING,
     }
-    result = service.insert_object("payments", h)
+    Payment.create(h)
 
     h = {
       "user_id"             => user1_id,
@@ -75,14 +75,14 @@ describe CrystalApi do
       "amount"              => 500,
       "payment_type"        => Payment::TYPE_TRANSFER,
     }
-    result = service.insert_object("payments", h)
+    Payment.create(h)
 
     h = {
       "user_id"      => user2_id,
       "amount"       => 200,
       "payment_type" => Payment::TYPE_OUTGOING,
     }
-    result = service.insert_object("payments", h)
+    Payment.create(h)
 
     # sign in
     http = HTTP::Client.new("localhost", Kemal.config.port)

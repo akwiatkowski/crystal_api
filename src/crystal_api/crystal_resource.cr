@@ -120,7 +120,7 @@ macro crystal_resource_model_methods(resource_name, resource_table, model_name)
 
 
   def delete
-    self.class.service.delete_object("{{resource_table}}", self.id)
+    self.class.service.delete_one("{{resource_table}}", self.id.not_nil!)
   end
 
 
@@ -156,7 +156,7 @@ macro crystal_resource_full_rest(resource_name, resource_path, resource_table, m
     # note: It is not needed now
     # resource = {{model_name}}.new(h)
 
-    db_result = env.crystal_service.insert_object("{{resource_table}}", h)
+    db_result = env.crystal_service.insert_into_table("{{resource_table}}", h)
     resources = crystal_resource_convert_{{resource_name}}(db_result)
 
     if resources.size > 0
@@ -169,7 +169,7 @@ macro crystal_resource_full_rest(resource_name, resource_path, resource_table, m
   put "/{{resource_path}}/:id" do |env|
     object_id = env.params.url["id"].to_s.to_i
     h = env.params.json["{{resource_name}}"] as Hash
-    db_result = env.crystal_service.update_object("{{resource_table}}", object_id, h)
+    db_result = env.crystal_service.update_one("{{resource_table}}", object_id, h)
     resources = crystal_resource_convert_{{resource_name}}(db_result)
 
     if resources.size > 0
@@ -181,7 +181,7 @@ macro crystal_resource_full_rest(resource_name, resource_path, resource_table, m
 
   delete "/{{resource_path}}/:id" do |env|
     object_id = env.params.url["id"].to_s.to_i
-    db_result = env.crystal_service.delete_object("{{resource_table}}", object_id)
+    db_result = env.crystal_service.delete_one("{{resource_table}}", object_id)
     resources = crystal_resource_convert_{{resource_name}}(db_result)
 
     if resources.size > 0

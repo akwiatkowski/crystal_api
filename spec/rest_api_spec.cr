@@ -81,8 +81,7 @@ describe CrystalApi do
     # create
     name = "Name to where #{Time.now.epoch}"
     h = {"name" => name}
-    result = service.insert_object("events", h)
-    collection = crystal_resource_convert_event(result)
+    EventModel.create(h)
 
     # find
     collection = EventModel.fetch_all(where: h)

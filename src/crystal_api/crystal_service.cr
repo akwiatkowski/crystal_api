@@ -148,16 +148,30 @@ class CrystalService
     return result
   end
 
-  ##########3
+  def update_all(
+      collection : String,
+      where : Hash = {} of String => PgType,
+      hash : Hash = {} of String => PgType
+  )
 
-  def get_filtered_objects(collection, hash : Hash)
-    wc = self.class.convert_to_where_clause(hash)
+    columns = [] of String
+    values = [] of String
 
-    sql = "select * from #{collection}"
+    hash.keys.each do |column|
+      columns << column
+      value = hash[column]
+      values << self.class.escape_value(value)
+    end
+
+    sql = "update only #{collection} set (#{columns.join(", ")}) = (#{values.join(", ")})"
+
+    # where
+    wc = CrystalService.convert_to_where_clause(where)
     if wc.size > 0
       sql += " where #{wc}"
     end
-    sql += ";"
+
+    sql += " returning *;"
 
     db = @pg.connection
     result = db.exec(sql)
@@ -165,17 +179,32 @@ class CrystalService
     return result
   end
 
-  def insert_object(collection, hash)
-    columns = [] of String
-    values = [] of String
+  def update_one(
+      collection : String,
+      id : Int32,
+      hash : Hash = {} of String => PgType
+  )
+    return update_all(
+      collection: collection,
+      where: {"id" => id},
+      hash: hash
+    )
+  end
 
-    hash.keys.each do |column|
-      columns << column
-      value = hash[column]
-      values << self.class.escape_value(value)
+  def delete_all(
+      collection : String,
+      where : Hash = {} of String => PgType
+  )
+
+    sql = "delete from only #{collection}"
+
+    # where
+    wc = CrystalService.convert_to_where_clause(where)
+    if wc.size > 0
+      sql += " where #{wc}"
     end
 
-    sql = "insert into #{collection} (#{columns.join(", ")}) values (#{values.join(", ")}) returning *;"
+    sql += " returning *;"
 
     db = @pg.connection
     result = db.exec(sql)
@@ -183,31 +212,14 @@ class CrystalService
     return result
   end
 
-  def update_object(collection, db_id, hash)
-    columns = [] of String
-    values = [] of String
-
-    hash.keys.each do |column|
-      columns << column
-      value = hash[column]
-      values << self.class.escape_value(value)
-    end
-
-    sql = "update only #{collection} set (#{columns.join(", ")}) = (#{values.join(", ")}) where id = #{db_id} returning *;"
-
-    db = @pg.connection
-    result = db.exec(sql)
-    @pg.release
-    return result
-  end
-
-  def delete_object(collection, db_id)
-    sql = "delete from only #{collection} where id = #{db_id} returning *;"
-
-    db = @pg.connection
-    result = db.exec(sql)
-    @pg.release
-    return result
+  def delete_one(
+      collection : String,
+      id : Int32
+  )
+    return delete_all(
+      collection: collection,
+      where: {"id" => id}
+    )
   end
 
   # Faster way to get CrystalService

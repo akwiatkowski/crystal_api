@@ -45,13 +45,12 @@ post "/transfer" do |env|
       "user_id"             => user.id,
       "destination_user_id" => destination_user.id,
       "amount"              => amount,
-      # "created_at" => Time.now,
+      "created_at" => Time.now,
       "payment_type" => Payment::TYPE_TRANSFER,
     }
 
-    result = env.crystal_service.insert_object("payments", h)
-    resources = crystal_resource_convert_payment(result)
-    resources[0].to_json
+    payment = Payment.create(h)
+    payment.to_json
   else
     nil
   end

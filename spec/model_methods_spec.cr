@@ -26,16 +26,14 @@ describe CrystalApi do
       "handle"          => sample_user1_handle,
       "hashed_password" => Crypto::MD5.hex_digest(sample_user1_password),
     }
-    service = User.service
-    result = service.insert_object("users", h)
+    user = User.create(h)
 
     h = {
       "email"           => sample_user2_email,
       "handle"          => sample_user2_handle,
       "hashed_password" => Crypto::MD5.hex_digest(sample_user2_password),
     }
-    service = User.service
-    result = service.insert_object("users", h)
+    user = User.create(h)
 
     # test fetching
 
@@ -70,7 +68,7 @@ describe CrystalApi do
         "created_at"   => Time.now,
         "payment_type" => Payment::TYPE_INCOMING,
       }
-      result = service.insert_object("payments", h)
+      Payment.create(h)
     end
 
     # test fetching
