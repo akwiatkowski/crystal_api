@@ -396,6 +396,6 @@ other. This is sample usage how to do it.
 
 If you want to use `curl` the command should looks like that:
 
-```
+```sh
 curl -H "Content-Type: application/json"  -H "X-Token: <token>" -X POST http://localhost:8002/transfer -d '{"destination_user_id":<user2_id>,"amount":<transfer_amount>}'
 ```
