@@ -116,14 +116,12 @@ macro crystal_resource_model_methods(resource_name, resource_table, model_name)
 
 
   def self.update(id : Int32, h : Hash(String, PgType))
+    # TODO
   end
-
 
   def delete
     self.class.service.delete_one("{{resource_table}}", self.id.not_nil!)
   end
-
-
 
 end
 

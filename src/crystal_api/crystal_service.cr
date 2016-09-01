@@ -87,12 +87,10 @@ class CrystalService
 
   # Fetch all model instances
   def fetch_all(
-      collection : String,
-      where : Hash = {} of String => PgType,
-      limit : Int32 = 25,
-      order : String = ""
-    )
-
+                collection : String,
+                where : Hash = {} of String => PgType,
+                limit : Int32 = 25,
+                order : String = "")
     sql = "select * from \"#{collection}\""
 
     # where
@@ -117,17 +115,15 @@ class CrystalService
   end
 
   def fetch_one(
-      collection : String,
-      where : Hash = {} of String => PgType,
-      order : String = ""
-    )
-
+                collection : String,
+                where : Hash = {} of String => PgType,
+                order : String = "")
     return fetch_all(
-        collection: collection,
-        where: where,
-        limit: 1,
-        order: order
-      )
+      collection: collection,
+      where: where,
+      limit: 1,
+      order: order
+    )
   end
 
   def insert_into_table(collection : String, hash : Hash = {} of String => PgType)
@@ -149,11 +145,9 @@ class CrystalService
   end
 
   def update_all(
-      collection : String,
-      where : Hash = {} of String => PgType,
-      hash : Hash = {} of String => PgType
-  )
-
+                 collection : String,
+                 where : Hash = {} of String => PgType,
+                 hash : Hash = {} of String => PgType)
     columns = [] of String
     values = [] of String
 
@@ -180,10 +174,9 @@ class CrystalService
   end
 
   def update_one(
-      collection : String,
-      id : Int32,
-      hash : Hash = {} of String => PgType
-  )
+                 collection : String,
+                 id : Int32,
+                 hash : Hash = {} of String => PgType)
     return update_all(
       collection: collection,
       where: {"id" => id},
@@ -192,10 +185,8 @@ class CrystalService
   end
 
   def delete_all(
-      collection : String,
-      where : Hash = {} of String => PgType
-  )
-
+                 collection : String,
+                 where : Hash = {} of String => PgType)
     sql = "delete from only #{collection}"
 
     # where
@@ -213,9 +204,8 @@ class CrystalService
   end
 
   def delete_one(
-      collection : String,
-      id : Int32
-  )
+                 collection : String,
+                 id : Int32)
     return delete_all(
       collection: collection,
       where: {"id" => id}

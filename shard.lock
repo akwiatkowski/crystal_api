@@ -22,7 +22,7 @@ shards:
 
   pg:
     github: will/crystal-pg
-    commit: cafe74083faacb8aedd7097e768504fa7b0a7d57
+    commit: 67b5e09c5311782bcd29a88a922907745a782784
 
   pool:
     github: ysbaddaden/pool

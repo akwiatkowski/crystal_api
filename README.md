@@ -14,7 +14,7 @@ Key notes:
 * there are some Rails-like methods (coming soon)
 * logic need to be customized
 
-
+**[Sample api explained is here](https://github.com/akwiatkowski/crystal_api/blob/master/payment_api_explained.md)**
 
 ## Roadmap
 
@@ -34,7 +34,7 @@ Key notes:
 - [x] Add "scope" method to model Mode.scope({where: Hash, limit: Int32, order: String})
 - [ ] Add `page`, `per_page`, `offset`, `random`
 - [x] One method for fetching
-- [ ] Models should be immutable
+- [ ] Models should be as much immutable as possible
 - [ ] Websockets
 
 ## Usage

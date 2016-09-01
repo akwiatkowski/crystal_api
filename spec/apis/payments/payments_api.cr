@@ -45,8 +45,8 @@ post "/transfer" do |env|
       "user_id"             => user.id,
       "destination_user_id" => destination_user.id,
       "amount"              => amount,
-      "created_at" => Time.now,
-      "payment_type" => Payment::TYPE_TRANSFER,
+      "created_at"          => Time.now,
+      "payment_type"        => Payment::TYPE_TRANSFER,
     }
 
     payment = Payment.create(h)

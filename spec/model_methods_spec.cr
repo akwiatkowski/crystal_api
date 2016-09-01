@@ -142,5 +142,4 @@ describe CrystalApi do
 
     CrystalInit.stop
   end
-
 end

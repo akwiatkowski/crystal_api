@@ -63,7 +63,7 @@ struct User
   end
 
   def incoming_payments_amount
-    result = execute_sql( payment_sql(Payment::TYPE_INCOMING) )
+    result = execute_sql(payment_sql(Payment::TYPE_INCOMING))
     amount = result.rows[0][0]
 
     if amount.nil?
@@ -74,7 +74,7 @@ struct User
   end
 
   def outgoing_payments_amount
-    result = execute_sql( payment_sql(Payment::TYPE_OUTGOING) )
+    result = execute_sql(payment_sql(Payment::TYPE_OUTGOING))
     amount = result.rows[0][0]
 
     if amount.nil?
