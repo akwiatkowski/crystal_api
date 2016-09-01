@@ -108,4 +108,39 @@ describe CrystalApi do
     # close after
     CrystalInit.stop
   end
+
+  it "duplicate model instance" do
+    pg_connect_from_yaml($db_yaml_path)
+    crystal_clear_table_now_user
+    crystal_clear_table_now_payment
+    CrystalInit.start_without_server
+
+    sample_user1_email = "email1@email.org"
+    sample_user1_handle = "user1"
+    sample_user1_password = "password1"
+
+    sample_user2_email = "email2@email.org"
+    sample_user2_handle = "user2"
+    sample_user2_password = "password1"
+
+    h = {
+      "email"           => sample_user1_email,
+      "handle"          => sample_user1_handle,
+      "hashed_password" => Crypto::MD5.hex_digest(sample_user1_password),
+    }
+    user = User.create(h).not_nil!
+
+    h2 = user.to_h
+    # new_user = User.create(h2).not_nil! # primary key error
+
+    h2.delete("id")
+    new_user = User.create(h2).not_nil!
+
+    user.email.should eq new_user.email
+    user.handle.should eq new_user.handle
+    user.hashed_password.should eq new_user.hashed_password
+
+    CrystalInit.stop
+  end
+
 end

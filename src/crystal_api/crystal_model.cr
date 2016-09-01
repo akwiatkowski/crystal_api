@@ -65,6 +65,14 @@ macro crystal_model(name, *properties)
                       }})
     end
 
+    def to_h
+      return {
+        {% for property in properties %}
+          "{{property.var}}" => {{property.var}},
+        {% end %}
+      }
+    end
+
     # TODO check if there is mapping already done by someone else
     def self.create_table_sql(collection)
       columns_chunks = Array(String).new

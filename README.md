@@ -29,10 +29,11 @@ Key notes:
 - [x] [`devise`](https://github.com/plataformatec/devise) compatible sign in controller
 - [x] [JWT](https://jwt.io/) request authentication
 - [x] Initial rights managament
-- [ ] Utilize singleton-like approach to get `service`
+- [x] Utilize singleton-like approach to get `service`
 - [ ] Rename `service` to something better
-- [ ] Add scope method to model Mode.scope({where: Hash, page: Int32, per_page: Int32, order: String})
-- [ ] One method for fetching
+- [x] Add "scope" method to model Mode.scope({where: Hash, limit: Int32, order: String})
+- [ ] Add `page`, `per_page`, `offset`, `random`
+- [x] One method for fetching
 - [ ] Models should be immutable
 - [ ] Websockets
 
