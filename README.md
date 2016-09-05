@@ -15,6 +15,8 @@ Key notes:
 * logic need to be customized
 
 **[Sample api explained is here](https://github.com/akwiatkowski/crystal_api/blob/master/payment_api_explained.md)**
+**[API - list of all methods (coming soon)](https://github.com/akwiatkowski/crystal_api/blob/master/api.md)**
+
 
 ## Roadmap
 

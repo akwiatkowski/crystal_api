@@ -116,11 +116,31 @@ macro crystal_resource_model_methods(resource_name, resource_table, model_name)
 
 
   def self.update(id : Int32, h : Hash(String, PgType))
-    # TODO
+    db_result = service.update_one(
+      collection: "{{resource_table}}",
+      id: id,
+      hash: h
+    )
+    resources = crystal_resource_convert_{{resource_name}}(db_result)
+    if resources.size > 0
+      return resources[0]
+    else
+      return nil
+    end
+  end
+
+  def update(h : Hash(String, PgType))
+    return nil if self.id.nil? # TODO
+
+    return self.class.update(self.id.not_nil!, h)
   end
 
   def delete
     self.class.service.delete_one("{{resource_table}}", self.id.not_nil!)
+  end
+
+  def reload
+    return self.class.fetch_one(where: {"id" => self.id})
   end
 
 end
