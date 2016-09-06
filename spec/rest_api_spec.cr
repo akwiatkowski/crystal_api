@@ -7,7 +7,7 @@ require "./apis/rest_events/api"
 describe CrystalApi do
   it "run simple REST API" do
     # connect DB, start migration
-    pg_connect_from_yaml($db_yaml_path)
+    pg_connect_from_yaml(db_yaml_path)
     CrystalInit.start_spawned_and_wait
 
     port = 8002
@@ -73,7 +73,7 @@ describe CrystalApi do
 
   it "get object by name using service" do
     # connect DB, start migration
-    pg_connect_from_yaml($db_yaml_path)
+    pg_connect_from_yaml(db_yaml_path)
     CrystalInit.start_spawned_and_wait
 
     service = CrystalService.instance

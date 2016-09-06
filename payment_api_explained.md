@@ -307,7 +307,7 @@ require "./apis/payments/payments_api"
 # database: crystal
 # user: crystal_user
 # password: crystal_password
-pg_connect_from_yaml($db_yaml_path)
+pg_connect_from_yaml(db_yaml_path)
 
 CrystalInit.start
 ```

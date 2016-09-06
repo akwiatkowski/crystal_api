@@ -78,7 +78,7 @@ macro crystal_model(name, *properties)
       columns_chunks = Array(String).new
 
       {% for property in properties %}
-        {{ t = "#{property.type}".gsub(/\|.*$/, "").strip }}
+        {{ t = "#{property.type}".gsub(/\|.*@@/, "").strip }}
 
         column_type = "text"
         {% if t == "Int32" %}

@@ -6,7 +6,7 @@ require "./apis/payments/payments_api"
 
 describe CrystalApi do
   it "get model instance using fetch method" do
-    pg_connect_from_yaml($db_yaml_path)
+    pg_connect_from_yaml(db_yaml_path)
     crystal_clear_table_now_user
     crystal_clear_table_now_payment
     CrystalInit.start_without_server
@@ -110,7 +110,7 @@ describe CrystalApi do
   end
 
   it "duplicate model instance" do
-    pg_connect_from_yaml($db_yaml_path)
+    pg_connect_from_yaml(db_yaml_path)
     crystal_clear_table_now_user
     crystal_clear_table_now_payment
     CrystalInit.start_without_server
@@ -144,7 +144,7 @@ describe CrystalApi do
   end
 
   it "duplicate model instance" do
-    pg_connect_from_yaml($db_yaml_path)
+    pg_connect_from_yaml(db_yaml_path)
     crystal_clear_table_now_user
     crystal_clear_table_now_payment
     CrystalInit.start_without_server

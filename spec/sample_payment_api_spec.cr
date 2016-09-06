@@ -8,7 +8,7 @@ describe CrystalApi do
   it "run payment transfer API, perform transfer, get user balance" do
     # connect DB, start migration
     # TODO put in something like prerun
-    pg_connect_from_yaml($db_yaml_path)
+    pg_connect_from_yaml(db_yaml_path)
     CrystalInit.start_spawned_and_wait
 
     sample_user1_email = "email1@email.org"

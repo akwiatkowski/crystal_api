@@ -1,16 +1,16 @@
 version: 1.0
 shards:
   jwt:
-    github: greyblake/crystal-jwt
-    version: 0.1.1
+    github: akwiatkowski/crystal-jwt
+    commit: f0bf2608dc6a38362c686cb47b2f52a67672c495
 
   kemal:
     github: sdogruyol/kemal
-    version: 0.14.1
+    version: 0.15.1
 
   kemal-auth-token:
     github: akwiatkowski/kemal-auth-token
-    commit: 23abfa4f15b31871d5b6479d16965c61f0874ce6
+    commit: 8ca2e4f2ce9b8dce9ed2679204466dc55a1d24e8
 
   kemal-pg:
     github: sdogruyol/kemal-pg
@@ -22,7 +22,7 @@ shards:
 
   pg:
     github: will/crystal-pg
-    commit: 67b5e09c5311782bcd29a88a922907745a782784
+    commit: cafe0b858007ad09ee67253c90d41ed7647628c4
 
   pool:
     github: ysbaddaden/pool
@@ -30,5 +30,5 @@ shards:
 
   radix:
     github: luislavena/radix
-    version: 0.3.0
+    version: 0.3.1
 
