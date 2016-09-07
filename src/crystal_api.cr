@@ -1,6 +1,6 @@
-require "kemal"
-require "kemal-pg"
+require "pg"
 
+require "kemal"
 require "kemal-auth-token/kemal-auth"
 
 require "./crystal_api/utils/time"

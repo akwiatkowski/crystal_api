@@ -170,7 +170,7 @@ macro crystal_resource_full_rest(resource_name, resource_path, resource_table, m
   end
 
   post "/{{resource_path}}" do |env|
-    h = env.params.json["{{resource_name}}"] #as Hash
+    h = env.params.json["{{resource_name}}"].as(Hash)
     # note: It is not needed now
     # resource = {{model_name}}.new(h)
 
@@ -186,7 +186,7 @@ macro crystal_resource_full_rest(resource_name, resource_path, resource_table, m
 
   put "/{{resource_path}}/:id" do |env|
     object_id = env.params.url["id"].to_s.to_i
-    h = env.params.json["{{resource_name}}"] #as Hash
+    h = env.params.json["{{resource_name}}"].as(Hash)
     db_result = env.crystal_service.update_one("{{resource_table}}", object_id, h)
     resources = crystal_resource_convert_{{resource_name}}(db_result)
 

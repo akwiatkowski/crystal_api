@@ -7,15 +7,18 @@ authors:
 dependencies:
   kemal:
     github: sdogruyol/kemal
+    branch: master
 
-  kemal-pg:
-    github: sdogruyol/kemal-pg
+  pg:
+    github: will/crystal-pg
     branch: master
 
   kemal-auth-token:
     github: akwiatkowski/kemal-auth-token
+    branch: master
 
-  jwt:
-    github: greyblake/crystal-jwt
+  # jwt:
+  #   github: greyblake/crystal-jwt
+  #   branch: master
 
 license: LGPLv3

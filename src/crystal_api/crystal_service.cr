@@ -6,25 +6,19 @@ class HTTP::Server::Context
   property! crystal_service : CrystalService
 end
 
-class Kemal::PG < HTTP::Handler
-  getter :pg
-end
-
 def pg_connect_from_yaml(yaml_file, capacity = 25, timeout = 0.1)
-  kpg = Kemal::PG.new(
-    Kemal::CrystalApi.url_from_yaml(yaml_file),
-    capacity,
-    timeout
-  )
-  Kemal.config.add_handler(kpg)
-
-  kca = Kemal::CrystalApi.new(kpg.pg)
+  kca = Kemal::CrystalApi.from_yaml(yaml_file)
   Kemal.config.add_handler(kca)
 end
 
 class Kemal::CrystalApi < HTTP::Handler
-  def initialize(@pg : ConnectionPool(PG::Connection))
+  def initialize(pg_url : String)
+    @pg = PG.connect(pg_url).as(PG::Connection)
     @crystal_service = CrystalService.new(@pg)
+  end
+
+  def self.from_yaml(yaml_path)
+    return self.new(url_from_yaml(yaml_path))
   end
 
   getter :crystal_service
@@ -45,6 +39,9 @@ class Kemal::CrystalApi < HTTP::Handler
 end
 
 class CrystalService
+  def initialize(@pg : PG::Connection)
+  end
+
   def self.escape_value(value)
     if value.is_a?(Int32)
       return value.to_s
@@ -74,14 +71,14 @@ class CrystalService
     return "#{conditions.join(" and ")}"
   end
 
-  def initialize(@pg : ConnectionPool(PG::Connection))
-  end
+
 
   # Execute plain SQL query
   def execute_sql(sql)
-    db = @pg.connection
+    #db = @pg.connection # pool
+    db = @pg
     result = db.exec(sql)
-    @pg.release
+    #@pg.release # pool
     return result
   end
 
@@ -138,9 +135,7 @@ class CrystalService
 
     sql = "insert into #{collection} (#{columns.join(", ")}) values (#{values.join(", ")}) returning *;"
 
-    db = @pg.connection
-    result = db.exec(sql)
-    @pg.release
+    result = execute_sql(sql)
     return result
   end
 
@@ -167,9 +162,7 @@ class CrystalService
 
     sql += " returning *;"
 
-    db = @pg.connection
-    result = db.exec(sql)
-    @pg.release
+    result = execute_sql(sql)
     return result
   end
 
@@ -197,9 +190,7 @@ class CrystalService
 
     sql += " returning *;"
 
-    db = @pg.connection
-    result = db.exec(sql)
-    @pg.release
+    result = execute_sql(sql)
     return result
   end
 

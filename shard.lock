@@ -6,15 +6,11 @@ shards:
 
   kemal:
     github: sdogruyol/kemal
-    version: 0.15.1
+    commit: 7c8915bfa4c10f98e065315816a2f689cc78d945
 
   kemal-auth-token:
     github: akwiatkowski/kemal-auth-token
     commit: 8ca2e4f2ce9b8dce9ed2679204466dc55a1d24e8
-
-  kemal-pg:
-    github: sdogruyol/kemal-pg
-    commit: 2b13249a5fd92f8806ec1dc1d037b9622709d4c2
 
   kilt:
     github: jeromegn/kilt
@@ -23,10 +19,6 @@ shards:
   pg:
     github: will/crystal-pg
     commit: cafe0b858007ad09ee67253c90d41ed7647628c4
-
-  pool:
-    github: ysbaddaden/pool
-    commit: c4ecfad1b87fbd8c6484d1fd536ccfd14c40cc94
 
   radix:
     github: luislavena/radix
