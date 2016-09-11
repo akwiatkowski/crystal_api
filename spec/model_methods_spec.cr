@@ -95,16 +95,16 @@ describe CrystalApi do
     )
     payments[0].delete
 
+    puts payments.inspect
+
     # 8. find(id) -> not exist
-    payments = Payment.fetch_all(where: {"id" => user_id})
+    payments = Payment.fetch_all(where: {"id" => payments[0].id})
     payments.size.should eq 0
   end
 
   it "duplicate model instance" do
-    pg_connect_from_yaml(db_yaml_path)
     crystal_clear_table_now_user
     crystal_clear_table_now_payment
-    CrystalInit.start_without_server
 
     sample_user1_email = "email1@email.org"
     sample_user1_handle = "user1"

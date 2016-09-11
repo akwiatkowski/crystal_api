@@ -3,13 +3,13 @@ class CrystalInit
 
   def self.start_initializers
     if INITIALIZERS.size > 0
-      # puts("About to run #{INITIALIZERS.size} initializers")
+      puts("About to run #{INITIALIZERS.size} initializers")
 
       INITIALIZERS.each do |p|
         p.call
       end
 
-      # puts("Initializers executed")
+      puts("Initializers executed")
     end
   end
 

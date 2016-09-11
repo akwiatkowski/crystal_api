@@ -27,12 +27,24 @@ macro crystal_resource_migrate(resource_name, resource_table, model_name)
     result = service.execute_sql(sql)
   end
 
+  def crystal_drop_now_{{resource_name}}
+    sql = "drop table {{resource_table}};"
+    handler = Kemal::Config::HANDLERS.select{|h| h.as?(Kemal::CrystalApi)}.first.as(Kemal::CrystalApi)
+    service = handler.crystal_service
+    result = service.execute_sql(sql)
+  end
+
   def crystal_migrate_{{resource_name}}
     CrystalInit::INITIALIZERS << ->{
       crystal_migrate_now_{{resource_name}}
     }
   end
 
+  def crystal_drop_{{resource_name}}
+    CrystalInit::INITIALIZERS << ->{
+      crystal_drop_now_{{resource_name}}
+    }
+  end
 
     # It is migration style, but require class methods
     # TODO integrate class methods and move to migration

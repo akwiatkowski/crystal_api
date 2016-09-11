@@ -19,12 +19,12 @@ end
 
 pg_connect_from_yaml(db_yaml_path)
 
-crystal_migrate_user
-crystal_migrate_payment
-crystal_migrate_event
+crystal_drop_now_user
+crystal_drop_now_payment
+crystal_drop_now_event
 
-crystal_clear_table_now_user
-crystal_clear_table_now_payment
-crystal_clear_table_now_event
+crystal_migrate_now_user
+crystal_migrate_now_payment
+crystal_migrate_now_event
 
 CrystalInit.start_spawned_and_wait
