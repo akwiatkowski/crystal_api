@@ -28,7 +28,7 @@ macro crystal_resource_migrate(resource_name, resource_table, model_name)
   end
 
   def crystal_drop_now_{{resource_name}}
-    sql = "drop table {{resource_table}};"
+    sql = "drop table if exists {{resource_table}};"
     handler = Kemal::Config::HANDLERS.select{|h| h.as?(Kemal::CrystalApi)}.first.as(Kemal::CrystalApi)
     service = handler.crystal_service
     result = service.execute_sql(sql)
