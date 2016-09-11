@@ -29,9 +29,9 @@ class CrystalInit
   end
 
   def self.wait_for_ready
-    while Kemal.config.server.nil?
-      sleep 0.01
-    end
+    #while Kemal.config.server.uninitialized?
+    sleep 0.01
+    #end
   end
 
   def self.start_spawned_and_wait
@@ -39,10 +39,11 @@ class CrystalInit
     wait_for_ready
   end
 
-  def self.stop
+  def self.stop!
     Kemal.config.handlers.clear
     Kemal::RouteHandler::INSTANCE.tree = Radix::Tree(Kemal::Route).new
-    Kemal.config.server.not_nil!.close if Kemal.config.server
+    Kemal.config.server.close
+    # unless Kemal.config.server.uninitialized?
   end
 
   def self.reset

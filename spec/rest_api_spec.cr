@@ -1,18 +1,9 @@
 require "./spec_helper"
 
-CrystalInit.reset # reset migrations, delete_all, ...
-
-require "./apis/rest_events/api"
-
-describe CrystalApi do
+describe EventRestApi do
   it "run simple REST API" do
-    # connect DB, start migration
-    pg_connect_from_yaml(db_yaml_path)
-    CrystalInit.start_spawned_and_wait
-
-    port = 8002
     endpoint = "/events"
-    host = "http://localhost:#{port}"
+    host = "http://localhost:#{PORT}"
     path = "#{host}#{endpoint}"
 
     random_name = Time.now.epoch.to_s
@@ -66,18 +57,9 @@ describe CrystalApi do
     puts "= #{(json.inspect[0..70] + "...").colorize(:green)}"
 
     json["name"].should eq random_name2
-
-    # close after
-    CrystalInit.stop
   end
 
-  it "get object by name using service" do
-    # connect DB, start migration
-    pg_connect_from_yaml(db_yaml_path)
-    CrystalInit.start_spawned_and_wait
-
-    service = CrystalService.instance
-
+  it "get object by name using model methods" do
     # create
     name = "Name to where #{Time.now.epoch}"
     h = {"name" => name}
@@ -96,8 +78,5 @@ describe CrystalApi do
     collection = EventModel.fetch_all(where: h)
 
     collection.size.should eq 0
-
-    # close after
-    CrystalInit.stop
   end
 end

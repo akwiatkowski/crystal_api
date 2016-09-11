@@ -1,15 +1,9 @@
 require "./spec_helper"
 
-CrystalInit.reset # reset migrations, delete_all, ...
-
-require "./apis/payments/payments_api"
-
 describe CrystalApi do
   it "get model instance using fetch method" do
-    pg_connect_from_yaml(db_yaml_path)
     crystal_clear_table_now_user
     crystal_clear_table_now_payment
-    CrystalInit.start_without_server
 
     sample_user1_email = "email1@email.org"
     sample_user1_handle = "user1"
@@ -104,9 +98,6 @@ describe CrystalApi do
     # 8. find(id) -> not exist
     payments = Payment.fetch_all(where: {"id" => user_id})
     payments.size.should eq 0
-
-    # close after
-    CrystalInit.stop
   end
 
   it "duplicate model instance" do
@@ -139,37 +130,5 @@ describe CrystalApi do
     user.email.should eq new_user.email
     user.handle.should eq new_user.handle
     user.hashed_password.should eq new_user.hashed_password
-
-    CrystalInit.stop
-  end
-
-  it "duplicate model instance" do
-    pg_connect_from_yaml(db_yaml_path)
-    crystal_clear_table_now_user
-    crystal_clear_table_now_payment
-    CrystalInit.start_without_server
-
-    sample_user1_email = "email1@email.org"
-    sample_user1_handle = "user1"
-    sample_user1_password = "password1"
-
-    sample_user2_email = "email2@email.org"
-    sample_user2_handle = "user2"
-    sample_user2_password = "password1"
-
-    h = {
-      "email"           => sample_user1_email,
-      "handle"          => sample_user1_handle,
-      "hashed_password" => Crypto::MD5.hex_digest(sample_user1_password),
-    }
-    user = User.create(h).not_nil!
-
-    result_user = user.update({"handle" => sample_user2_handle}).not_nil!
-    reloaded_user = user.reload.not_nil!
-
-    result_user.handle.should eq sample_user2_handle
-    reloaded_user.handle.should eq sample_user2_handle
-
-    CrystalInit.stop
   end
 end

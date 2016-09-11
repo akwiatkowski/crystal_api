@@ -1,18 +1,5 @@
-# require "crystal_api"
-
-require "./models/payment"
-require "./models/user"
-
-auth_token_mw = Kemal::AuthToken.new
-auth_token_mw.sign_in do |email, password|
-  User.sign_in(email, password)
+class PaymentApi
 end
-auth_token_mw.load_user do |user|
-  User.load_user(user)
-end
-
-Kemal.config.add_handler(auth_token_mw)
-Kemal.config.port = 8002
 
 get "/current_user" do |env|
   env.current_user.to_json

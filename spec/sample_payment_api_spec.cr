@@ -1,16 +1,7 @@
 require "./spec_helper"
 
-CrystalInit.reset # reset migrations, delete_all, ...
-
-require "./apis/payments/payments_api"
-
-describe CrystalApi do
+describe PaymentApi do
   it "run payment transfer API, perform transfer, get user balance" do
-    # connect DB, start migration
-    # TODO put in something like prerun
-    pg_connect_from_yaml(db_yaml_path)
-    CrystalInit.start_spawned_and_wait
-
     sample_user1_email = "email1@email.org"
     sample_user1_handle = "user1"
     sample_user1_password = "password1"
@@ -18,8 +9,6 @@ describe CrystalApi do
     sample_user2_email = "email2@email.org"
     sample_user2_handle = "user2"
     sample_user2_password = "password1"
-
-    service = CrystalService.instance
 
     # create user 1
     h = {"email" => sample_user1_email}
@@ -90,6 +79,8 @@ describe CrystalApi do
     json = JSON.parse(result.body)
     token = json["token"].to_s
 
+    puts json.inspect
+
     headers = HTTP::Headers.new
     headers["X-Token"] = token
 
@@ -130,8 +121,5 @@ describe CrystalApi do
     new_balance = result.body.to_s.to_i
     new_balance.should eq user1.balance
     new_balance.should eq (old_balance - transfer_amount)
-
-    # close after
-    CrystalInit.stop
   end
 end
