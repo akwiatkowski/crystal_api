@@ -80,6 +80,11 @@ class CrystalService
     return result
   end
 
+  def execute_sql_single_result(sql)
+    result = execute_sql(sql)
+    return result.rows[0][0]
+  end
+
   # Fetch all model instances
   def fetch_all(
                 collection : String,
@@ -107,6 +112,25 @@ class CrystalService
 
     db_result = execute_sql(sql)
     return db_result
+  end
+
+  # Fetch all model instances
+  def count(
+                collection : String,
+                where : Hash = {} of String => PgType,
+                )
+    sql = "select count(*) from \"#{collection}\""
+
+    # where
+    wc = CrystalService.convert_to_where_clause(where)
+    if wc.size > 0
+      sql += " where #{wc}"
+    end
+
+    sql += ";"
+
+    result = execute_sql_single_result(sql)
+    return result
   end
 
   def fetch_one(

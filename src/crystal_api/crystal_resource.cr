@@ -74,8 +74,23 @@ macro crystal_resource_model_methods(resource_name, resource_table, model_name)
     self.class.execute_sql(q)
   end
 
-  def self.delete_all
-    service.execute_sql("delete from \"{{resource_table}}\";")
+  def self.delete_all(where : Hash = {} of String => PgType)
+    service.delete_all(
+      collection: "{{resource_table}}",
+      where: where
+    )
+  end
+
+  def self.count(
+      where : Hash = {} of String => PgType,
+    )
+
+    db_result = service.count(
+      collection: "{{resource_table}}",
+      where: where
+    )
+
+    return db_result
   end
 
   def self.fetch_all(

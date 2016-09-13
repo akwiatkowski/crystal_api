@@ -1,1 +1,1 @@
-drop table 'cats';
+drop table cats;

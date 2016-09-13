@@ -33,7 +33,7 @@ class CrystalMigrations
 
     return names.map do |n|
       n.gsub(REGEXP, "")
-    end
+    end.sort
   end
 
   def get_executed_migrations
@@ -47,7 +47,22 @@ class CrystalMigrations
     names.each do |name|
       if migrations.select { |m| m.name == name }.size == 0
         up_migration(name)
+      else
+        # puts "#{name} - exists"
       end
+    end
+  end
+
+  # last
+  def rollback
+    names = get_migration_names
+    down_migration(names.last)
+  end
+
+  # all
+  def full_rollback
+    get_migration_names.reverse.each do |name|
+      down_migration(name)
     end
   end
 
@@ -63,6 +78,9 @@ class CrystalMigrations
     up_sql = File.read(up_migration_path(name))
     down_sql = File.read(down_migration_path(name))
 
+    puts "-- #{name} - UP"
+    puts "#{up_sql}"
+
     DbMigration.execute_sql(up_sql)
 
     DbMigration.create({
@@ -70,5 +88,22 @@ class CrystalMigrations
       "up_hash"   => Crypto::MD5.hex_digest(up_sql),
       "down_hash" => Crypto::MD5.hex_digest(down_sql),
     })
+
+    puts "-- #{name} - UP - DONE\n"
+  end
+
+  def down_migration(name : String)
+    down_sql = File.read(down_migration_path(name))
+
+    puts "-- #{name} - DOWN"
+    puts "#{down_sql}"
+
+    DbMigration.execute_sql(down_sql)
+
+    DbMigration.delete_all(where: {
+      "name"      => name
+    })
+
+    puts "-- #{name} - DOWN - DONE\n"
   end
 end

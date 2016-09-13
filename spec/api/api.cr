@@ -4,6 +4,8 @@ require "./settings"
 
 require "./models/payment"
 require "./models/user"
+# for migration test
+require "./models/cat"
 
 require "./auth"
 
