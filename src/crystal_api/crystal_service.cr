@@ -71,14 +71,12 @@ class CrystalService
     return "#{conditions.join(" and ")}"
   end
 
-
-
   # Execute plain SQL query
   def execute_sql(sql)
-    #db = @pg.connection # pool
+    # db = @pg.connection # pool
     db = @pg
     result = db.exec(sql)
-    #@pg.release # pool
+    # @pg.release # pool
     return result
   end
 

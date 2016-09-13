@@ -11,6 +11,7 @@ require "./crystal_api/crystal_init"
 require "./crystal_api/crystal_model"
 require "./crystal_api/crystal_resource"
 require "./crystal_api/crystal_service"
+require "./crystal_api/crystal_migrations"
 
 module CrystalApi
 end

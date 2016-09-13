@@ -29,9 +29,9 @@ class CrystalInit
   end
 
   def self.wait_for_ready
-    #while Kemal.config.server.uninitialized?
+    # while Kemal.config.server.uninitialized?
     sleep 0.01
-    #end
+    # end
   end
 
   def self.start_spawned_and_wait
