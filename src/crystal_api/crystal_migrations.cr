@@ -81,7 +81,7 @@ class CrystalMigrations
     puts "-- #{name} - UP"
     puts "#{up_sql}"
 
-    DbMigration.execute_sql(up_sql)
+    execute_sql_file_content(up_sql)
 
     DbMigration.create({
       "name"      => name,
@@ -98,12 +98,21 @@ class CrystalMigrations
     puts "-- #{name} - DOWN"
     puts "#{down_sql}"
 
-    DbMigration.execute_sql(down_sql)
+    execute_sql_file_content(down_sql)
 
     DbMigration.delete_all(where: {
       "name"      => name
     })
 
     puts "-- #{name} - DOWN - DONE\n"
+  end
+
+  def execute_sql_file_content(sql : String)
+    sql.split(/;\n/).each do |s|
+      ss = s.strip
+      if ss.size > 0
+        DbMigration.execute_sql(s)
+      end
+    end
   end
 end
