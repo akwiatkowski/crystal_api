@@ -6,7 +6,7 @@ shards:
 
   kemal:
     github: sdogruyol/kemal
-    commit: 7c8915bfa4c10f98e065315816a2f689cc78d945
+    commit: cf2144636d9d5cef9d8b3f7b3404b003cedb3760
 
   kemal-auth-token:
     github: akwiatkowski/kemal-auth-token
