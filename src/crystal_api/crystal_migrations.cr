@@ -108,11 +108,23 @@ class CrystalMigrations
   end
 
   def execute_sql_file_content(sql : String)
+    DbMigration.execute_sql(transaction_start_sql)
+
     sql.split(/;\n/).each do |s|
       ss = s.strip
       if ss.size > 0
         DbMigration.execute_sql(s)
       end
     end
+
+    DbMigration.execute_sql(transaction_end_sql)
+  end
+
+  def transaction_start_sql
+    "BEGIN;"
+  end
+
+  def transaction_end_sql
+    "COMMIT;"
   end
 end
