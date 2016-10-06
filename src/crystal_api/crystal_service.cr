@@ -77,15 +77,37 @@ class CrystalService
     return "#{conditions.join(" and ")}"
   end
 
+  # Copied from Kemal logger
+  private def elapsed_text(elapsed)
+    millis = elapsed.total_milliseconds
+    return "#{millis.round(2)}ms" if millis >= 1
+
+    "#{(millis * 1000).round(2)}µs"
+  end
+
   # Execute plain SQL query
   def execute_sql(sql)
+    time = Time.now
+
     # db = @pg.connection # pool
     db = @pg
     result = db.exec(sql)
-
-    Kemal.config.logger.not_nil!.write("SQL #{sql}") if @@logging
-
     # @pg.release # pool
+
+    if @@logging
+      elapsed_text = elapsed_text(Time.now - time)
+      l = Kemal.config.logger.not_nil!
+      l.write(time)
+      l.write("    ") # request status
+      l.write(" ")
+      l.write("SQL")
+      l.write(" ")
+      l.write(sql)
+      l.write(" -- ")
+      l.write(elapsed_text.to_s)
+      l.write("\n")
+    end
+
     return result
   end
 
