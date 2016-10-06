@@ -39,7 +39,13 @@ class Kemal::CrystalApi < HTTP::Handler
 end
 
 class CrystalService
+  @@logging = false
+
   def initialize(@pg : PG::Connection)
+  end
+
+  def self.logging=(b : Bool)
+    @@logging = b
   end
 
   def self.escape_value(value)
@@ -76,6 +82,9 @@ class CrystalService
     # db = @pg.connection # pool
     db = @pg
     result = db.exec(sql)
+
+    Kemal.config.logger.not_nil!.write("SQL #{sql}") if @@logging
+
     # @pg.release # pool
     return result
   end

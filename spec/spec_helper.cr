@@ -28,3 +28,5 @@ crystal_migrate_now_payment
 crystal_migrate_now_event
 
 CrystalInit.start_spawned_and_wait
+
+#CrystalService.logging = true
