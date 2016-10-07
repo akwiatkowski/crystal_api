@@ -120,12 +120,14 @@ class CrystalService
   def fetch_all(
                 collection : String,
                 where : Hash = {} of String => PgType,
+                where_sql : String = "",
                 limit : Int32 = 25,
                 order : String = "")
     sql = "select * from \"#{collection}\""
 
     # where
     wc = CrystalService.convert_to_where_clause(where)
+    wc = where_sql unless where_sql.to_s == "" # force custom SQL
     if wc.size > 0
       sql += " where #{wc}"
     end
@@ -149,11 +151,13 @@ class CrystalService
   def count(
                 collection : String,
                 where : Hash = {} of String => PgType,
+                where_sql : String = "",
                 )
     sql = "select count(*) from \"#{collection}\""
 
     # where
     wc = CrystalService.convert_to_where_clause(where)
+    wc = where_sql unless where_sql.to_s == "" # force custom SQL
     if wc.size > 0
       sql += " where #{wc}"
     end
@@ -167,10 +171,12 @@ class CrystalService
   def fetch_one(
                 collection : String,
                 where : Hash = {} of String => PgType,
+                where_sql : String = "",
                 order : String = "")
     return fetch_all(
       collection: collection,
       where: where,
+      where_sql: where_sql,
       limit: 1,
       order: order
     )
@@ -195,6 +201,7 @@ class CrystalService
   def update_all(
                  collection : String,
                  where : Hash = {} of String => PgType,
+                 where_sql : String = "",
                  hash : Hash = {} of String => PgType)
     columns = [] of String
     values = [] of String
@@ -209,6 +216,7 @@ class CrystalService
 
     # where
     wc = CrystalService.convert_to_where_clause(where)
+    wc = where_sql unless where_sql.to_s == "" # force custom SQL
     if wc.size > 0
       sql += " where #{wc}"
     end
@@ -232,11 +240,14 @@ class CrystalService
 
   def delete_all(
                  collection : String,
-                 where : Hash = {} of String => PgType)
+                 where : Hash = {} of String => PgType,
+                 where_sql : String = ""
+                 )
     sql = "delete from only #{collection}"
 
     # where
     wc = CrystalService.convert_to_where_clause(where)
+    wc = where_sql unless where_sql.to_s == "" # force custom SQL
     if wc.size > 0
       sql += " where #{wc}"
     end

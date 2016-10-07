@@ -131,4 +131,24 @@ describe CrystalApi do
     user.handle.should eq new_user.handle
     user.hashed_password.should eq new_user.hashed_password
   end
+
+  it "select using custom where clause" do
+    crystal_clear_table_now_user
+    crystal_clear_table_now_payment
+
+    sample_user1_email = "email1@email.org"
+    sample_user1_handle = "user1"
+    sample_user1_password = "password1"
+
+    h = {
+      "email"           => sample_user1_email,
+      "handle"          => sample_user1_handle,
+      "hashed_password" => Crypto::MD5.hex_digest(sample_user1_password),
+    }
+    user = User.create(h).not_nil!
+
+    users = User.fetch_all(where_sql: "email = '#{sample_user1_email}'")
+    users.size.should eq 1
+    users[0].email.should eq sample_user1_email
+  end
 end

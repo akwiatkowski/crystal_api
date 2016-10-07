@@ -74,20 +74,26 @@ macro crystal_resource_model_methods(resource_name, resource_table, model_name)
     self.class.execute_sql(q)
   end
 
-  def self.delete_all(where : Hash = {} of String => PgType)
+  def self.delete_all(
+      where : Hash = {} of String => PgType,
+      where_sql : String = ""
+    )
     service.delete_all(
       collection: "{{resource_table}}",
-      where: where
+      where: where,
+      where_sql: where_sql
     )
   end
 
   def self.count(
       where : Hash = {} of String => PgType,
+      where_sql : String = ""
     )
 
     db_result = service.count(
       collection: "{{resource_table}}",
-      where: where
+      where: where,
+      where_sql: where_sql
     )
 
     return db_result
@@ -95,6 +101,7 @@ macro crystal_resource_model_methods(resource_name, resource_table, model_name)
 
   def self.fetch_all(
       where : Hash = {} of String => PgType,
+      where_sql : String = "",
       limit : Int32 = 25,
       order : String = ""
     )
@@ -102,6 +109,7 @@ macro crystal_resource_model_methods(resource_name, resource_table, model_name)
     db_result = service.fetch_all(
       collection: "{{resource_table}}",
       where: where,
+      where_sql: where_sql,
       limit: limit,
       order: order
     )
@@ -112,11 +120,13 @@ macro crystal_resource_model_methods(resource_name, resource_table, model_name)
 
   def self.fetch_one(
       where : Hash = {} of String => PgType,
+      where_sql : String = "",
       order : String = ""
     )
 
     resources = fetch_all(
       where: where,
+      where_sql: where_sql,
       limit: 1,
       order: order
     )
