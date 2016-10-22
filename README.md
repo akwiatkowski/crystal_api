@@ -8,7 +8,7 @@
 `crystal_api` is a set of tools to allow create **very fast** JSON APIs.
 
 Key notes:
-* all models are `struct` instead of `class` (like in [active_record.cr][https://github.com/waterlink/active_record.cr])
+* all models are `struct` instead of `class` (like in [active_record.cr](https://github.com/waterlink/active_record.cr))
 * custom SQL requests are preferred and encouraged
 * but you can use one macro to create all REST (no customization)
 * there are some Rails-like methods (coming soon)
