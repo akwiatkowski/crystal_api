@@ -1,4 +1,5 @@
 require "./spec_helper"
+require "./integration_helper"
 
 describe EventRestApi do
   it "run simple REST API" do

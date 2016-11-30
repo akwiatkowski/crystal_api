@@ -1,4 +1,5 @@
 require "./spec_helper"
+require "./integration_helper"
 
 describe PaymentApi do
   it "run payment transfer API, perform transfer, get user balance" do
@@ -79,7 +80,7 @@ describe PaymentApi do
     json = JSON.parse(result.body)
     token = json["token"].to_s
 
-    puts json.inspect
+    json["token"]?.nil?.should be_false
 
     headers = HTTP::Headers.new
     headers["X-Token"] = token

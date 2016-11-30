@@ -1,4 +1,5 @@
 require "./spec_helper"
+require "./integration_helper"
 
 describe CrystalMigrations do
   it "create DB, run migration and store info which were executed" do

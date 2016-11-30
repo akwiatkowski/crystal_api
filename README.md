@@ -32,9 +32,10 @@ Key notes:
 - [x] [JWT](https://jwt.io/) request authentication
 - [x] Initial rights managament
 - [x] Utilize singleton-like approach to get `service`
-- [ ] Remove `kemal-pg` and use `crystal-pg`
+- [x] Remove `kemal-pg` and use `crystal-pg`
+- [ ] Use DB connection pool
 - [ ] Use typed queries
-- [ ] Escape parameters
+- [x] Escape parameters - only quotation characters
 - [ ] Add `Nil` to field type as union by default
 - [ ] Rename `service` to something better
 - [x] Add "scope" method to model Mode.scope({where: Hash, limit: Int32, order: String})

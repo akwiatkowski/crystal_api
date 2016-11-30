@@ -1,4 +1,5 @@
 require "./spec_helper"
+require "./integration_helper"
 
 describe CrystalApi do
   it "get model instance using fetch method" do
@@ -94,8 +95,6 @@ describe CrystalApi do
       order: "id desc"
     )
     payments[0].delete
-
-    puts payments.inspect
 
     # 8. find(id) -> not exist
     payments = Payment.fetch_all(where: {"id" => payments[0].id})

@@ -48,11 +48,15 @@ class CrystalService
     @@logging = b
   end
 
+  def self.escape_string(s)
+    s.gsub(/["']/){ |s| '\\' + s }
+  end
+
   def self.escape_value(value)
     if value.is_a?(Int32)
       return value.to_s
     elsif value.is_a?(String)
-      return "'" + value.to_s + "'"
+      return "'" + escape_string(value.to_s) + "'"
     else
       return "'" + value.to_s + "'"
     end
