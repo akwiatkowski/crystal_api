@@ -14,8 +14,11 @@ Key notes:
 * there are some Rails-like methods (coming soon)
 * logic need to be customized
 
-**[Sample api explained is here](https://github.com/akwiatkowski/crystal_api/blob/master/payment_api_explained.md)**
-**[API - list of all methods (coming soon)](https://github.com/akwiatkowski/crystal_api/blob/master/api.md)**
+**[Sample payment API is explained  here](https://github.com/akwiatkowski/crystal_api/blob/master/payment_api_explained.md)**
+
+**[Here, Alive - real life API example with JS frontend](https://github.com/akwiatkowski/herealive/tree/master/src)**
+
+**[API of API - list of all methods (coming soon)](https://github.com/akwiatkowski/crystal_api/blob/master/api.md)**
 
 
 ## Roadmap
@@ -39,14 +42,22 @@ Key notes:
 - [x] Add `Nil` to field type as union by default - shorter model definition
 - [ ] Rename `service` to something better
 - [x] Add "scope" method to model Mode.scope({where: Hash, limit: Int32, order: String})
-- [ ] Add `page`, `per_page`, `offset`, `random`
+- [x] Add `page`, `per_page`, `offset`
+- [ ] Add `random` to `fetch_one`
+- [ ] Add `random` order to `fetch_all`
 - [x] One method for fetching
 - [ ] Models should be as much immutable as possible
 - [ ] Websockets
 
 ## Usage
 
-Please check [spec](https://github.com/akwiatkowski/crystal_api/tree/master/spec) first.
+Please check:
+
+* [Tests](https://github.com/akwiatkowski/crystal_api/tree/master/spec),
+* [Sample payment API explained](https://github.com/akwiatkowski/crystal_api/blob/master/payment_api_explained.md),
+* [Here, Alive - real life API example with JS frontend](https://github.com/akwiatkowski/herealive/tree/master/src),
+* [API of API - list of all methods is coming soon](https://github.com/akwiatkowski/crystal_api/blob/master/api.md)
+
 
 ### Fast full REST
 
@@ -72,13 +83,13 @@ CrystalInit.start
 ### Custom API
 
 Please check [short sample](https://github.com/akwiatkowski/crystal_api/tree/master/spec/apis/payments).
-This is API for money transfers. User has its account and assigned payments:
-incoming (external money transfer), outgoing (user withdraw money), transfer
-(user's account money to another user).
+This is money transfers API. User has its account and assigned payments:
+incoming (external transfered money to system), outgoing (user withdraw money), transfer
+(user's account money transfered to another user's account).
 
-### Rails like methods
+### Rails like model methods
 
-At this moment I'm refactoring and adding code to easier DB operations.
+At this moment I'm refactoring and adding code for easier DB operations.
 Readme will be updated after that moment.
 
 ## Contributing

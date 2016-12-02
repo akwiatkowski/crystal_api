@@ -62,6 +62,8 @@ end
 macro crystal_resource_model_methods(resource_name, resource_table, model_name)
   struct {{model_name}}
 
+  @@per_page = 25
+
   def self.service
     CrystalService.instance
   end
@@ -103,15 +105,28 @@ macro crystal_resource_model_methods(resource_name, resource_table, model_name)
       where : Hash = {} of String => PgType,
       where_sql : String = "",
       limit : Int32 = 25,
-      order : String = ""
+      offset : Int32 = 0,
+      order : String = "",
+      per_page : Int32 = @@per_page,
+      page : Int32 = 0,
     )
+
+    # pagination
+    # TODO: first page if page number 1, should it be 0?
+    if page > 0
+      pagination_limit = per_page
+      # pagination cannot fetch more than regular fetch_all
+      limit = pagination_limit if limit > 0 && pagination_limit < limit
+      offset = (page - 1) * per_page
+    end
 
     db_result = service.fetch_all(
       collection: "{{resource_table}}",
       where: where,
       where_sql: where_sql,
       limit: limit,
-      order: order
+      order: order,
+      offset: offset
     )
     resources = crystal_resource_convert_{{resource_name}}(db_result)
 

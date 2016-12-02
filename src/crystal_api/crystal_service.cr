@@ -51,7 +51,7 @@ class CrystalService
   end
 
   def self.escape_string(s)
-    s.gsub(/["']/){ |s| '\\' + s }
+    s.gsub(/["']/) { |s| '\\' + s }
   end
 
   def self.escape_value(value)
@@ -128,7 +128,9 @@ class CrystalService
                 where : Hash = {} of String => PgType,
                 where_sql : String = "",
                 limit : Int32 = 25,
-                order : String = "")
+                order : String = "",
+                offset : Int32 = 0
+                )
     sql = "select * from \"#{collection}\""
 
     # where
@@ -147,6 +149,10 @@ class CrystalService
       sql += " limit #{limit}"
     end
 
+    if offset > 0
+      sql += " offset #{offset}"
+    end
+
     sql += ";"
 
     db_result = execute_sql(sql)
@@ -155,10 +161,9 @@ class CrystalService
 
   # Fetch all model instances
   def count(
-                collection : String,
-                where : Hash = {} of String => PgType,
-                where_sql : String = "",
-                )
+            collection : String,
+            where : Hash = {} of String => PgType,
+            where_sql : String = "")
     sql = "select count(*) from \"#{collection}\""
 
     # where
@@ -247,8 +252,7 @@ class CrystalService
   def delete_all(
                  collection : String,
                  where : Hash = {} of String => PgType,
-                 where_sql : String = ""
-                 )
+                 where_sql : String = "")
     sql = "delete from only #{collection}"
 
     # where

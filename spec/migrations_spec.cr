@@ -6,17 +6,17 @@ describe CrystalMigrations do
     cm = CrystalMigrations.new("spec/migrations")
     cm.migrate
 
-    count =  Cat.count.to_s.to_i
+    count = Cat.count.to_s.to_i
     count.should eq 2
 
     cm.rollback
 
-    count =  Cat.count.to_s.to_i
+    count = Cat.count.to_s.to_i
     count.should eq 0
 
     cm.migrate
 
-    count =  Cat.count.to_s.to_i
+    count = Cat.count.to_s.to_i
     count.should eq 2
 
     cm.full_rollback

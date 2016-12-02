@@ -21,10 +21,10 @@ macro crystal_model(name, *properties)
 
 
     def initializea({{
-                     *properties.map do |field|
-                       "@#{field.var} : #{field.type} = #{field.value.is_a?(Nop) ? nil : field.value}"
-                     end
-                   }})
+                      *properties.map do |field|
+                        "@#{field.var} : #{field.type} = #{field.value.is_a?(Nop) ? nil : field.value}"
+                      end
+                    }})
     end
 
     def initialize(h : Hash)

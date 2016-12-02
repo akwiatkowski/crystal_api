@@ -101,7 +101,7 @@ class CrystalMigrations
     execute_sql_file_content(down_sql)
 
     DbMigration.delete_all(where: {
-      "name"      => name
+      "name" => name,
     })
 
     puts "-- #{name} - DOWN - DONE\n"

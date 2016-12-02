@@ -150,4 +150,27 @@ describe CrystalApi do
     users.size.should eq 1
     users[0].email.should eq sample_user1_email
   end
+
+  it "has pagination methods" do
+    crystal_clear_table_now_user
+
+    (1..50).each do |i|
+      email = "email#{i}@email.org"
+      handle = "user#{i}"
+      password = "password#{i}"
+
+      h = {
+        "email"           => email,
+        "handle"          => handle,
+        "hashed_password" => Crypto::MD5.hex_digest(password),
+      }
+      user = User.create(h).not_nil!
+    end
+
+    # pagination methods
+
+    per_page = 5
+    collection = User.fetch_all(per_page: per_page, page: 1)
+    collection.size.should eq per_page
+  end
 end

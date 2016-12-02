@@ -23,12 +23,12 @@ I have moved models into separate files. I will explain them now.
 # initialize models
 crystal_model(
   Payment,
-  id : (Int32 | Nil) = nil,
-  amount : (Int32 | Nil) = nil,
-  created_at : (Time | Nil) = Time.now,
-  payment_type : (String | Nil) = "incoming_draft",
-  user_id : (Int32 | Nil) = nil,
-  destination_user_id : (Int32 | Nil) = nil,
+  id : Int32,
+  amount : Int32nil,
+  created_at : Time = Time.now,
+  payment_type : String = "incoming_draft",
+  user_id : Int32,
+  destination_user_id : Int32,
 )
 ```
 
@@ -82,10 +82,10 @@ Because user's balance is related to `Payment` model we need to require `payment
 ```crystal
 crystal_model(
   User,
-  id : (Int32 | Nil) = nil,
-  email : (String | Nil) = nil,
-  hashed_password : (String | Nil) = nil,
-  handle : (String | Nil) = nil
+  id : Int32,
+  email : String,
+  hashed_password : String,
+  handle : String
 )
 crystal_resource(user, users, User)
 
