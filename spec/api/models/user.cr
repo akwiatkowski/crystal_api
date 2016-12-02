@@ -2,10 +2,10 @@ require "./payment"
 
 crystal_model(
   User,
-  id : (Int32 | Nil) = nil,
-  email : (String | Nil) = nil,
-  hashed_password : (String | Nil) = nil,
-  handle : (String | Nil) = nil
+  id : Int32,
+  email : String,
+  hashed_password : String,
+  handle : String
 )
 crystal_resource(user, users, User)
 

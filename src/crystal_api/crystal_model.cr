@@ -3,12 +3,12 @@ require "json"
 macro crystal_model(name, *properties)
   struct {{name.id}}
     {% for property in properties %}
-      getter {{property.var}} : {{property.type}}
+      getter {{property.var}} : (Nil | {{property.type}})
     {% end %}
 
     JSON.mapping(
     {% for property in properties %}
-      {{property.var}}: {{property.type}},
+      {{property.var}}: (Nil | {{property.type}}),
     {% end %}
     )
 
@@ -18,9 +18,11 @@ macro crystal_model(name, *properties)
       {% end %}
     ]
 
-    def initialize({{
+
+
+    def initializea({{
                      *properties.map do |field|
-                       "@#{field.id}".id
+                       "@#{field.var} : #{field.type} = #{field.value.is_a?(Nop) ? nil : field.value}"
                      end
                    }})
     end
@@ -28,8 +30,8 @@ macro crystal_model(name, *properties)
     def initialize(h : Hash)
       {% for property in properties %}
         if h["{{property.var}}"]?
-          if h["{{property.var}}"].as?( ({{property.type}}) )
-            self.{{property.var}} = h["{{property.var}}"].as( ({{property.type}}) )
+          if h["{{property.var}}"].as?( (Nil | {{property.type}}) )
+            self.{{property.var}} = h["{{property.var}}"].as( (Nil | {{property.type}}) )
           end
         end
       {% end %}
@@ -40,8 +42,8 @@ macro crystal_model(name, *properties)
         keys.each_index do |i|
           if keys[i] == "{{property.var}}"
 
-            if values[i].as?( ({{property.type}}) )
-              self.{{property.var}} = values[i].as( ({{property.type}}) )
+            if values[i].as?( (Nil | {{property.type}}) )
+              self.{{property.var}} = values[i].as( (Nil | {{property.type}}) )
             end
 
           end

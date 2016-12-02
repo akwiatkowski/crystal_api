@@ -1,12 +1,12 @@
 # initialize models
 crystal_model(
   Payment,
-  id : (Int32 | Nil) = nil,
-  amount : (Int32 | Nil) = nil,
-  created_at : (Time | Nil) = Time.now,
-  payment_type : (String | Nil) = "incoming_draft",
-  user_id : (Int32 | Nil) = nil,
-  destination_user_id : (Int32 | Nil) = nil,
+  id : Int32,
+  amount : Int32,
+  created_at : Time = Time.now,
+  payment_type : String = "incoming_draft",
+  user_id : Int32,
+  destination_user_id : Int32,
 )
 crystal_resource(payment, payments, Payment)
 

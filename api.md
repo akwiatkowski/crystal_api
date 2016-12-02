@@ -27,7 +27,7 @@ password: crystal_password
 Model is a `struct` used to store and use database row. It is lower level ORM.
 
 ```crystal
-crystal_model(ModelName, field : (Type | Nil) = nil, ...)
+crystal_model(ModelName, field : Type, ...)
 ```
 
 * `ModelName` - example: Event, User, Payment
@@ -42,7 +42,7 @@ Notes:
 Example:
 
 ```crystal
-crystal_model(EventModel, id : (Int32 | Nil) = nil, name : (String | Nil) = nil)
+crystal_model(EventModel, id : Int32, name : String)
 ```
 
 ### Full REST JSON API

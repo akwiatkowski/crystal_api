@@ -36,7 +36,7 @@ Key notes:
 - [ ] Use DB connection pool
 - [ ] Use typed queries
 - [x] Escape parameters - only quotation characters
-- [ ] Add `Nil` to field type as union by default
+- [x] Add `Nil` to field type as union by default - shorter model definition
 - [ ] Rename `service` to something better
 - [x] Add "scope" method to model Mode.scope({where: Hash, limit: Int32, order: String})
 - [ ] Add `page`, `per_page`, `offset`, `random`
@@ -54,7 +54,7 @@ Please check [spec](https://github.com/akwiatkowski/crystal_api/tree/master/spec
 pg_connect_from_yaml("config/database.yml")
 
 # all fields must be union with Nil
-crystal_model(EventModel, id : (Int32 | Nil) = nil, name : (String | Nil) = nil)
+crystal_model(EventModel, id : Int32, name : String)
 
 # magic macro
 # crystal_resource_full_rest(<name>, <resource path without '/' >, <DB table name>, <Model struct>)
