@@ -1,4 +1,5 @@
 require "pg"
+require "pool/connection"
 
 require "kemal"
 require "kemal-auth-token/kemal-auth"

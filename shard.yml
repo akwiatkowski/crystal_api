@@ -17,8 +17,8 @@ dependencies:
     github: akwiatkowski/kemal-auth-token
     branch: master
 
-  # jwt:
-  #   github: greyblake/crystal-jwt
-  #   branch: master
+  pool:
+    github: ysbaddaden/pool
+    branch: master
 
 license: LGPLv3

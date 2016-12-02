@@ -13,8 +13,10 @@ end
 
 class Kemal::CrystalApi < HTTP::Handler
   def initialize(pg_url : String)
-    @pg = PG.connect(pg_url).as(PG::Connection)
-    @crystal_service = CrystalService.new(@pg)
+    @pool = ConnectionPool(PG::Connection).new(capacity: 25, timeout: 0.01) do
+      PG.connect(pg_url).as(PG::Connection)
+    end
+    @crystal_service = CrystalService.new(@pool)
   end
 
   def self.from_yaml(yaml_path)
@@ -41,7 +43,7 @@ end
 class CrystalService
   @@logging = false
 
-  def initialize(@pg : PG::Connection)
+  def initialize(@pool : ConnectionPool(PG::Connection))
   end
 
   def self.logging=(b : Bool)
@@ -93,10 +95,10 @@ class CrystalService
   def execute_sql(sql)
     time = Time.now
 
-    # db = @pg.connection # pool
-    db = @pg
+    # using connection pool
+    db = @pool.checkout
     result = db.exec(sql)
-    # @pg.release # pool
+    @pool.checkin(db)
 
     if @@logging
       elapsed_text = elapsed_text(Time.now - time)

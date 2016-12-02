@@ -24,6 +24,10 @@ shards:
     github: will/crystal-pg
     commit: cafe0b858007ad09ee67253c90d41ed7647628c4
 
+  pool:
+    github: ysbaddaden/pool
+    commit: c4ecfad1b87fbd8c6484d1fd536ccfd14c40cc94
+
   radix:
     github: luislavena/radix
     version: 0.3.5

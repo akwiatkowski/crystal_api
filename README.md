@@ -33,7 +33,7 @@ Key notes:
 - [x] Initial rights managament
 - [x] Utilize singleton-like approach to get `service`
 - [x] Remove `kemal-pg` and use `crystal-pg`
-- [ ] Use DB connection pool
+- [x] Use DB connection pool
 - [ ] Use typed queries
 - [x] Escape parameters - only quotation characters
 - [x] Add `Nil` to field type as union by default - shorter model definition
