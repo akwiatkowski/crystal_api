@@ -9,6 +9,10 @@ dependencies:
     github: sdogruyol/kemal
     branch: master
 
+  # db:
+  #   github: crystal-lang/crystal-db
+  #   # branch: master
+
   pg:
     github: will/crystal-pg
     branch: master

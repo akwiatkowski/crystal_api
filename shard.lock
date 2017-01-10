@@ -1,16 +1,20 @@
 version: 1.0
 shards:
+  db:
+    github: crystal-lang/crystal-db
+    version: 0.3.3
+
   jwt:
     github: akwiatkowski/crystal-jwt
     commit: f0bf2608dc6a38362c686cb47b2f52a67672c495
 
   kemal:
     github: sdogruyol/kemal
-    commit: b4c10a3f59392080f54a206ad40f779628cdad96
+    commit: 42827c9a9df439640e1d2dec90bd21476197ca9b
 
   kemal-auth-token:
     github: akwiatkowski/kemal-auth-token
-    commit: 8ca2e4f2ce9b8dce9ed2679204466dc55a1d24e8
+    commit: 4ce8d1c23ac90f7feea3cdda9ba2483d2cf029a3
 
   kilt:
     github: jeromegn/kilt
@@ -18,11 +22,11 @@ shards:
 
   multipart:
     github: RX14/multipart.cr
-    version: 0.1.1
+    version: 0.1.2
 
   pg:
     github: will/crystal-pg
-    commit: cafe0b858007ad09ee67253c90d41ed7647628c4
+    commit: 4a67fe5899685ea04f65dbfd4711deb6b688cd30
 
   pool:
     github: ysbaddaden/pool

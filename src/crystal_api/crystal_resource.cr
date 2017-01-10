@@ -5,14 +5,39 @@ macro crystal_resource(resource_name, resource_table, model_name)
 end
 
 macro crystal_resource_convert(resource_name, model_name)
+  # TODO rewrite
+  # https://github.com/crystal-lang/crystal-db/blob/master/src/db/result_set.cr
+  # https://github.com/crystal-lang/crystal-db/blob/master/src/db/mapping.cr
+  # https://github.com/will/crystal-pg/blob/800540888edf4012d2fdaba5d508665b462700dc/src/pg/result_set.cr
+  # http://crystal-lang.github.io/crystal-db/api/0.3.3/
+  # https://crystal-lang.org/docs/database/
   def crystal_resource_convert_{{resource_name}}(db_result)
-    fields = db_result.fields.map{|f| f.name} # Array(String)
+    fields = db_result.column_names
 
     resources = Array({{model_name}}).new
-    db_result.rows.each do |row|
-      resource = {{model_name}}.new(fields, row)
+
+    db_result.each do
+      # #i = 0
+      # #resource = {{model_name}}.new
+      # db_result.each_column do
+      #   puts db_result.read(type: String).class
+      #
+      #   #resource.assign(fields[i], db_result.read)
+      #   #i += 1
+      # end
+      #
+
+      resource = {{model_name}}.new(db_result)
       resources << resource
     end
+
+    # fields # => ["id", "name"]
+    # db_result.read # => 1
+    # db_result.read # => "test"
+
+    #   # resource = {{model_name}}.new(fields, row)
+    #   # resources << resource
+    #end
 
     return resources
   end

@@ -7,7 +7,7 @@ crystal_model(EventModel, id : Int32, name : String)
 crystal_resource_full_rest(event, events, events, EventModel)
 
 # migrations are not ready
-# crystal_migrate_event
+crystal_migrate_now_event
 
 Kemal.config.logging = false
 Kemal.config.port = 8002

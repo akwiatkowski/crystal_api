@@ -27,6 +27,12 @@ macro crystal_model(name, *properties)
                     }})
     end
 
+    def initialize(rs : ::DB::ResultSet)
+      {% for property in properties %}
+        self.{{property.var}} = rs.read
+      {% end %}
+    end
+
     def initialize(h : Hash)
       {% for property in properties %}
         if h["{{property.var}}"]?
@@ -47,6 +53,15 @@ macro crystal_model(name, *properties)
             end
 
           end
+        end
+      {% end %}
+    end
+
+    # dirty hacks for crystal-db
+    def assign(attr, value)
+      {% for property in properties %}
+        if attr = "{{property.var}}"
+          self.{{property.var}} = value
         end
       {% end %}
     end
