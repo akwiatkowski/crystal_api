@@ -11,7 +11,10 @@ def pg_connect_from_yaml(yaml_file, capacity = 25, timeout = 0.1)
   Kemal.config.add_handler(kca)
 end
 
-class Kemal::CrystalApi < HTTP::Handler
+class Kemal::CrystalApi
+
+  include HTTP::Handler
+
   def initialize(pg_url : String)
     @pool = ConnectionPool(PG::Connection).new(capacity: 25, timeout: 0.01) do
       PG.connect(pg_url).as(PG::Connection)
